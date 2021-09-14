@@ -13,7 +13,10 @@
 $errors = [];
 
 /**
- * @todo: comment
+ * Wir wollen die Validierung nur dann ausführen, wenn auch wirklich ein Formular abgeschickt wurde. Sonst würde sie
+ * auch ausgeführt werden, wenn man das Formular nur aufruft und das bringt nichts. Daher prüfen wir, ob die Daten
+ * aus dem Button übertragen wurden - dann können wir davon ausgehen, dass die restlichen Formulardaten auch vorhanden
+ * sind.
  */
 if (isset($_POST['do-submit'])) {
     /**
@@ -98,21 +101,24 @@ if (isset($_POST['do-submit'])) {
     }
 
     /**
-     * @todo: comment
+     * Nun prüfen wir ob das Topic nicht übergeben wurde oder ob der Default-Wert übergeben wurde und schreiben bei
+     * Bedarf einen Fehlermeldung.
      */
     if (!isset($_POST['topic']) || $_POST['topic'] === '_default') {
         $errors[] = 'Bitte wählen Sie ein Topic aus.';
     }
 
     /**
-     * @todo: comment
+     * Wenn die message nicht gesetzt wurde oder kürzer ist als 10 Zeichen, dann schreiben wir noch einen Fehler.
      */
     if (!isset($_POST['message']) || strlen($_POST['message']) < 10) {
         $errors[] = 'Bitte geben Sie eine Nachricht ein.';
     }
 
     /**
-     * @todo: comment
+     * Eine Checkbox, die nicht angehakerlt ist, wird nicht übergeben an den Server, wenn sie angehakerlt ist und kein
+     * value-Attribut hat, dann hat sie den Wert "on" (string). Hier prüfen wir, ob die Checkbox nicht angehakerlt ist
+     * oder den falschen Wert hat und schreiben bei Bedarf einen Fehler.
      */
     if (!isset($_POST['newsletter']) || $_POST['newsletter'] !== "on") {
         $errors[] = 'Sie MÜSSEN den Newsletter abonnieren.';
@@ -122,11 +128,15 @@ if (isset($_POST['do-submit'])) {
 
 <?php
 /**
- * @todo: comment
+ * Wir wollen das Formular nur dann anzeigen, wenn es noch nicht abgeschickt wurde ODER wenn es Fehler gibt.
  */
 if (!empty($errors) || !isset($_POST['do-submit'])): ?>
     <div class="errors">
-        <?php foreach ($errors as $error): ?>
+        <?php
+        /**
+         * Nun gehen wir den Fehler-Array durch und generieren p-Tags daraus.
+         */
+        foreach ($errors as $error): ?>
             <p class="error" style="background-color: #c96868; padding: 5px">
                 <?php echo $error; ?>
             </p>
@@ -135,9 +145,17 @@ if (!empty($errors) || !isset($_POST['do-submit'])): ?>
 
     <form method="post" novalidate>
         <div>
-            <!--
-            bedingung ? dann-das : sonst-das
-            -->
+            <?php
+            /**
+             * Hier verwenden wir den Ternary Operator, der im Prinzip nur ein sehr kurzes if-else ist:
+             *
+             * (bedingung) ? dann-mach-das : sonst-mach-das
+             *
+             * Wir manchen das, damit wir die zuvor abgeschickten Werte aus dem Formular wieder in das Formular
+             * schreiben, wenn Fehler bei der Validierung aufgetreten sind. Dadurch müssen die Werte nicht komplett neu
+             * eingegeben werden, sondern nur noch bearbeitet, bis sie korrekt validiert werden können.
+             */
+            ?>
             <label for="name">Name</label>
             <input type="text" name="name" id="name" minlength="2" required value="<?php echo(isset($_POST['name']) ? $_POST['name'] : ''); ?>">
         </div>

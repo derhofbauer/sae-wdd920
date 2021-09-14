@@ -13,7 +13,10 @@
 $errors = [];
 
 /**
- * @todo: comment
+ * Wir wollen die Validierung nur dann ausführen, wenn auch wirklich ein Formular abgeschickt wurde. Sonst würde sie
+ * auch ausgeführt werden, wenn man das Formular nur aufruft und das bringt nichts. Daher prüfen wir, ob die Daten
+ * aus dem Button übertragen wurden - dann können wir davon ausgehen, dass die restlichen Formulardaten auch vorhanden
+ * sind.
  */
 if (isset($_POST['do-submit'])) {
     /**
@@ -98,7 +101,11 @@ if (isset($_POST['do-submit'])) {
     }
 
     /**
-     * @todo: comment
+     * Hier prüfen wir, ob ein eingegebener Wert einer Telefonnummer entsprechen kann:
+     *
+     * + (\+?|0{0,2}) = ein Plus ODER 0-2 Nuller
+     * + [0-9 ]{1,3} = 1-3 Ziffern (Ländervorwahl)
+     * + [0-9 \/()-]+ = mindestens eine Ziffer, Leerzeichen, Slash, Klammern oder Bindestriche
      */
     $pattern = '/(\+?|0{0,2})[0-9 ]{1,3}[0-9 \/()-]+/m';
     if (!isset($_POST['phone']) || preg_match($pattern, $_POST['phone']) !== 1) {
@@ -107,21 +114,24 @@ if (isset($_POST['do-submit'])) {
 
 
     /**
-     * @todo: comment
+     * Nun prüfen wir ob das Topic nicht übergeben wurde oder ob der Default-Wert übergeben wurde und schreiben bei
+     * Bedarf einen Fehlermeldung.
      */
     if (!isset($_POST['topic']) || $_POST['topic'] === '_default') {
         $errors['topic'] = 'Bitte wählen Sie ein Topic aus.';
     }
 
     /**
-     * @todo: comment
+     * Wenn die message nicht gesetzt wurde oder kürzer ist als 10 Zeichen, dann schreiben wir noch einen Fehler.
      */
     if (!isset($_POST['message']) || strlen($_POST['message']) < 10) {
         $errors['message'] = 'Bitte geben Sie eine Nachricht mit mindestens 10 Zeichen ein.';
     }
 
     /**
-     * @todo: comment
+     * Eine Checkbox, die nicht angehakerlt ist, wird nicht übergeben an den Server, wenn sie angehakerlt ist und kein
+     * value-Attribut hat, dann hat sie den Wert "on" (string). Hier prüfen wir, ob die Checkbox nicht angehakerlt ist
+     * oder den falschen Wert hat und schreiben bei Bedarf einen Fehler.
      */
     if (!isset($_POST['newsletter']) || $_POST['newsletter'] !== "on") {
         $errors['newsletter'] = 'Sie MÜSSEN den Newsletter abonnieren.';
@@ -132,13 +142,20 @@ if (isset($_POST['do-submit'])) {
  * Get error by name and print it.
  *
  * @param string $name
- *
- * @todo:comment
  */
 function printError (string $name)
 {
+    /**
+     * Zunächst holen wir die $errors Variable in den Scope der Funktion. das ist nicht sonderlich elegant, aber es tut
+     * seinen Zweck.
+     */
     global $errors;
 
+    /**
+     * Dann prüfen wir, ob ein Fehler für den als Funktionsparameter übergebenen Wert $name existiert. In der
+     * Validierung speichern wir nämlich Fehler nicht einfach nur noch in $errors hinein, sondern vergeben auch selbst
+     * Indizex, damit die Fehler einfacher Formularfeldern zugeordnet werden können.
+     */
     if (isset($errors[$name])) {
         echo '<div class="error" style="background-color: #f86161; padding: 5px">' . $errors[$name] . '</div>';
     }
@@ -148,11 +165,12 @@ function printError (string $name)
  * Get old value and print it.
  *
  * @param string $name
- *
- * @todo:comment
  */
 function old (string $name)
 {
+    /**
+     * Hier ersetzen wir den Ternary Operator für die vorher geschickten Formulardaten, mit einem normalen if.
+     */
     if (isset($_POST[$name])) {
         echo $_POST[$name];
     }
@@ -162,17 +180,25 @@ function old (string $name)
 
 <?php
 /**
- * @todo: comment
+ * Wir wollen das Formular nur dann anzeigen, wenn es noch nicht abgeschickt wurde ODER wenn es Fehler gibt.
  */
 if (!empty($errors) || !isset($_POST['do-submit'])): ?>
     <form method="post" novalidate>
         <div>
-            <!--
-            @todo: comment (bedingung ? dann-das : sonst-das)
-            -->
+            <?php
+            /**
+             * Statt in jedem Formular-value einen eigenen Ternary Operator zu verwenden, haben wir eine Funktion dafür
+             * geschrieben, die wir einfach nur noch verwenden müssen.
+             */
+            ?>
             <label for="name">Name</label>
             <input type="text" name="name" id="name" minlength="2" required value="<?php old('name'); ?>">
-            <?php printError('name'); ?>
+            <?php
+            /**
+             * Damit wir nicht überalle den selben Code-Block hinkopieren müssen, der Fehler generiert, haben wir dafür
+             * auch eine Funktion geschrieben, die wir überall aufrufen können, wo wir sie brauchen.
+             */
+            printError('name'); ?>
         </div>
 
         <div>
