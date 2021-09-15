@@ -1,0 +1,67 @@
++ products
+  + id: PK A_I
+  + title: VARCHAR(255)
+  + description: TEXT
+  + price: FLOAT (€)/INT (€c)
+  + size: VARCHAR/INT
+  + image: VARCHAR (URL to image)
+  + author: INT FK:users:id
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ categories
+  + id: PK A_I
+  + title: VARCHAR(255)
+  + description: TEXT
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ categories_products_mm
+  + id: ...
+  + category_id: INT FK:categories:id
+  + product_id: INT FK:products:id
++ users
+  + id: PK A_I
+  + username: VARCHAR(255) UK
+  + password: VARCHAR(255) (password HASH!!)
+  + wants_newsletter: BOOL
+  + email: VARCHAR(255) UK
+  + firstname: VARCHAR(255)
+  + lastname: VARCHAR(255)
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ orders
+  + id: PK A_I
+  + user_id: INT FK:users:id
+  + payment_method_id: INT FK:payment_methods:id
+  + transaction: TEXT
+  + delivery_address_id: INT FK:addresses:id
+  + invoice_address_id: INT FK:addresses:id
+  + products: TEXT(json)
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ addresses
+  + id: PK A_I
+  + user_id: INT FK:users:id
+  + address: TEXT
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ payment_methods
+  + id: PK A_I
+  + user_id: INT FK:users:id
+  + card_number: VARCHAR(50)
+  + card_expire: VARCHAR(10)
+  + card_ccv: VARCHAR(5)
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ ratings
+  + id: PK A_I
+  + user_id: ...
+  + product_id: ...
+  + rating: INT(5)
+  + comment: TEXT
+  + crdate: TIMESTAMP
+  + tstamp: TIMESTAMP on_update:CURRENT_TIMESTAMP()
++ carts (mm)
+  + id: ...
+  + user_id: ...
+  + product_id: ...
+  + qnty: INT
