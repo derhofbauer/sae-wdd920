@@ -31,11 +31,16 @@ var_dump($_SESSION);
             /**
              * Wenn im redirector.php die URL in die Session gespeichert wurde, weil sie geklickt wurde, dann können
              * wir diese Information hier aus der Session auslesen und für unsere Bedingung verwenden.
-             * @todo: comment
+             *
+             * Beachte, dass wir hier auf Array Keys prüfen, weil wir die URLs in dieser Version des Recirectors von den
+             * Array Values in die Keys verschoben haben.
              */
             if (isset($_SESSION['counter']) && array_key_exists($link, $_SESSION['counter'])) {
-                printf('%dx besucht', $_SESSION['counter'][$link]);
-                // echo $_SESSION['counter'][$link] . ' mal besucht';
+                /**
+                 * Die printf()-Funktion nimmt einen Format-String entgegen, der Platzhalter beinhaltet. Alle weiteren
+                 * Paramater ersetzen dann einfach nur die Platzhalter. %d ist Platzhalter für einen ganzzahligen Wert.
+                 */
+                printf('%dx besucht', $_SESSION['counter'][$link]); // ident mit: echo $_SESSION['counter'][$link] . ' mal besucht';
             } ?>
         </li>
     <?php endforeach; ?>

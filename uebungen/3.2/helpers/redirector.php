@@ -14,9 +14,8 @@ session_start();
 $url = urldecode($_GET['url']);
 
 /**
- * Dann prüfen wir, ob es schon einen Array "urls" in der Session gibt oder nicht. Wenn nicht, dann erstellen wir ein
+ * Dann prüfen wir, ob es schon einen Array "counter" in der Session gibt oder nicht. Wenn nicht, dann erstellen wir ein
  * leeres Array.
- * @todo: comment
  */
 if (!isset($_SESSION['counter'])) {
     $_SESSION['counter'] = [];
@@ -25,11 +24,19 @@ if (!isset($_SESSION['counter'])) {
 /**
  * Steht die URL nicht bereits in der Session, so schreiben wir sie hinein. Damit verhindern wir, dass die URL mehrmals
  * in die Session geschrieben wird.
- * @todo: comment
+ *
+ * Wir verwenden die $url hier aber als Array Key und nicht als Wert. Das ermöglicht uns den Wert für die Anzahl der
+ * Clicks zu verwenden. Umgekehrt wäre nicht möglich, weil Array Keys eindeutig sein müssen.
  */
 if (array_key_exists($url, $_SESSION['counter'])) {
+    /**
+     * Existiert die $url schon als Array Key in der Session, so rechnen wir zum Wert eines dazu.
+     */
     $_SESSION['counter'][$url]++;
 } else {
+    /**
+     * Andernfalls schreiben wir die $url als Array Key hinein und setzen den Counter auf 1.
+     */
     $_SESSION['counter'][$url] = 1;
 }
 
