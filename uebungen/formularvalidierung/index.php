@@ -20,8 +20,11 @@
     <div class="form-group">
         <label for="select">Some values</label>
         <?php
-        // @todo: comment
 
+        /**
+         * Zunächst definieren wir uns die Werte für die Option Tags, damit wir diese dynamisch generieren können und
+         * jeweils prüfen, ob einer davon ausgewählt war.
+         */
         $options = [
             'value-1' => 'Option 1',
             'value-2' => 'Option 2',
@@ -31,10 +34,23 @@
         ?>
         <select name="select" id="select" class="form-control">
             <option value="_default">Default</option>
-            <?php foreach ($options as $htmlValue => $label): ?>
+            <?php
+            /**
+             * Nun gehen wir alle $options durch.
+             */
+            foreach ($options as $htmlValue => $label): ?>
                 <?php
+                /**
+                 * Wir wollen den <option>-Tag, der beim letzten Absenden des Formulars ausgewählt war, wieder auswählen.
+                 * Daher definieren wir uns einen Partikel, den wir mit einem Wert belegen, sofern der Tag ausgewählt
+                 * sein soll. Der Wert ist das gesamte selected-Binary Attribute.
+                 */
                 $selectedParticle = '';
 
+                /**
+                 * War der <option>-Tag beim letzten Absenden ausgewählt, so generieren wir das selected-Binary
+                 * Attribute hier mit PHP und schreiben es weiter unten in den <option>-Tag.
+                 */
                 if (isset($_POST['select']) && $_POST['select'] === $htmlValue) {
                     $selectedParticle = ' selected';
                 }
@@ -46,6 +62,12 @@
 
     <div class="form-group">
         <label>
+            <?php
+            /**
+             * Hier machen wir genau das selbe wie oben, aber mit dem Ternary Operator. Wenn die Checkbox angehakerlt
+             * war, dann setzen wir das Binary Attribute checked, andernfalls setzten wir einen leeren String.
+             */
+            ?>
             <input type="checkbox" name="checkbox" id="checkbox"<?php echo (isset($_POST['checkbox']) && $_POST['checkbox'] === 'on') ? ' checked' : ''; ?>>
             Checkbox
         </label>
