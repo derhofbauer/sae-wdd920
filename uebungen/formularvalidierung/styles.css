@@ -1,0 +1,16 @@
+.container {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+}
+
+.form-group label {
+  flex-basis: 25%;
+}
+
+.form-control {
+  flex-basis: 75%;
+}
