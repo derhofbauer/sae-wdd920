@@ -10,9 +10,9 @@ class Vehicle implements VehicleInterface
 
     use OwnerTrait;
 
-    private ?string $signal = null;
-    protected int $velocity = 0;
-    protected int $topVelocity = 160;
+//    private ?string $signal = null;
+//    protected int $velocity = 0;
+//    protected int $topVelocity = 100;
 
     public function __construct(
         public string $model,
@@ -20,7 +20,9 @@ class Vehicle implements VehicleInterface
         public string $numberplate,
         public int $numberOfWheels = 4,
         public int $numberOfDoors = 3,
-        $topVelocity = 160
+        private ?string $signal = null,
+        protected int $velocity = 0,
+        protected int $topVelocity = 160,
     ) {
         $this->topVelocity = $topVelocity;
     }
