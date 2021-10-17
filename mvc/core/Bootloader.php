@@ -21,7 +21,7 @@ class Bootloader
      * Je nach Umgebung, welche Umgebung (dev/prod) gerade konfiguriert ist, schalten wir das error reporting ein oder
      * aus.
      */
-    public static function setErrorDisplay ()
+    public static function setDisplayErrors ()
     {
         /**
          * Config aus dem app.php Config File auslesen
