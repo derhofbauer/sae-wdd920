@@ -10,7 +10,7 @@
 
 <?php
 /**
- * @todo: comment
+ * Das Layout erwartet eine Variable $templatePath, damit das Layout selbst das Template laden kann.
  */
 require_once $templatePath; ?>
 

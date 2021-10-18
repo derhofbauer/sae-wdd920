@@ -5,12 +5,16 @@ namespace App\Controllers;
 use Core\View;
 
 /**
- * @todo: comment
+ * Beispiel Controller
  */
 class HomeController
 {
 
-    public function index () {
+    /**
+     * Beispielmethode
+     */
+    public function index()
+    {
         View::render('home', ['foo' => 'bar']);
     }
 

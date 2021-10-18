@@ -13,12 +13,26 @@ class Bootloader
     public function __construct()
     {
         /**
-         * @todo: comment
+         * Ein try-catch-Block ermöglicht es uns Code auszuführen und eine Exception, die in diesem Code auftritt
+         * abzufangen, ohne dass der Skriptdurchlauf abgebrochen wird.
          */
         try {
+            /**
+             * Hier erstellen wir einen neuen Router und starten dann das Routing.
+             */
             $router = new Router();
             $router->route();
+
         } catch (\Exception $exception) {
+            /**
+             * Ist innerhalb des try-Blocks eine Exception aufgetreten (auch innerhalb von Funktionen, die in dem Block
+             * aufgerufen wurden), so wird diese Exception hier an unseren ErrorHandler übergeben. Dadurch haben wir
+             * einen einzigen Handler für alle Exceptions, die in Controllern auftreten könnten.
+             *
+             * Exceptions selbst sind Fehler im System, die das System in einen Zustand bringen, an dem es nicht mehr
+             * weiter kommt. Wenn keine Route gefunden wird, kann man drüber diskutieren, aber eine Umsetzung als
+             * Exception ist meines Erachtens nach durchaus legitim.
+             */
             ExceptionHandler::handle($exception);
         }
     }
