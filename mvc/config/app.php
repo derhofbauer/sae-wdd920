@@ -13,5 +13,10 @@ return [
      * die zwischen dev und prod unterscheiden kann. Dadurch können wir Beispielsweise das Error Reporting ein-
      * bzw. ausschalten.
      */
-    'environment' => 'development',
+    'environment' => 'dev',
+
+    /**
+     * @todo: comment
+     */
+    'default-layout' => 'default'
 ];

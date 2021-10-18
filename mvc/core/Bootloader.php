@@ -12,16 +12,22 @@ class Bootloader
 
     public function __construct()
     {
-        // Routing
-        // Controller laden
-        // Action aufrufen
+        /**
+         * @todo: comment
+         */
+        try {
+            $router = new Router();
+            $router->route();
+        } catch (\Exception $exception) {
+            ExceptionHandler::handle($exception);
+        }
     }
 
     /**
      * Je nach Umgebung, welche Umgebung (dev/prod) gerade konfiguriert ist, schalten wir das error reporting ein oder
      * aus.
      */
-    public static function setDisplayErrors ()
+    public static function setDisplayErrors()
     {
         /**
          * Config aus dem app.php Config File auslesen
