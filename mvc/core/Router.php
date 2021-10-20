@@ -219,7 +219,7 @@ class Router
          * - {param} mit einer Named Capture Group ersetzen
          * - Anfang und Ende des String setzen
          */
-        $regex = str_replace('/', '\/', $route);
+        $regex = str_replace('/', '\/', $route); // => '\/channels\/{id}'
 
         /**
          * Alle Parameter Namen durchgehen und innerhalb der $regex mit einer benannten Capture Group ersetzen, damit
@@ -231,7 +231,7 @@ class Router
              * führt zu:
              * \/blog\/{slug} => \/blog\/(?<slug>[^\/]+)
              */
-            $regex = str_replace("{{$paramName}}", "(?<$paramName>[^\/]+)", $regex);
+            $regex = str_replace("{{$paramName}}", "(?<$paramName>[^\/]+)", $regex); // => '\/channels\/(?<id>[^\/]+)'
         }
 
         /**
@@ -239,7 +239,7 @@ class Router
          *
          * \/blog\/(?<slug>[^\/]+) => /^\/blog\/(?<slug>[^\/]+)$/
          */
-        $regex = "/^$regex$/";
+        $regex = "/^$regex$/"; // => '/^\/channels\/(?<id>[^\/]+)$/'
 
         /**
          * Fertige Regular Expression zurückgeben

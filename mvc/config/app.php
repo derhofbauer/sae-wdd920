@@ -21,5 +21,10 @@ return [
      * Hier definieren wir welches Layout standardmäßig verwendet wird. Hier könnte beispielsweise bei Werbeaktionen,
      * bei denen die gesamte Seite von einem Werbekunden gebrandet wird, hilfreich sein.
      */
-    'default-layout' => 'default'
+    'default-layout' => 'default',
+
+    /**
+     * @todo: comment
+     */
+    'app-slug' => 'sae-php-mvc-session'
 ];

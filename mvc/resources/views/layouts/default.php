@@ -8,11 +8,19 @@
 </head>
 <body>
 
+<nav class="nav">
+
+</nav>
+
 <?php
 /**
  * Das Layout erwartet eine Variable $templatePath, damit das Layout selbst das Template laden kann.
  */
 require_once $templatePath; ?>
+
+<footer class="footer">
+
+</footer>
 
 </body>
 </html>

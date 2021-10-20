@@ -13,6 +13,12 @@ class Bootloader
     public function __construct()
     {
         /**
+         * @todo: comment
+         */
+        Session::init();
+        Session::initSuperglobals();
+
+        /**
          * Ein try-catch-Block ermöglicht es uns Code auszuführen und eine Exception, die in diesem Code auftritt
          * abzufangen, ohne dass der Skriptdurchlauf abgebrochen wird.
          */

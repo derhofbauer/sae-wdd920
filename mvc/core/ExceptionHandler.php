@@ -15,6 +15,9 @@ class ExceptionHandler
      */
     public static function handle(\Exception $exception)
     {
+        // Log Eintrag schreiben
+        // ...
+
         /**
          * Hier laden wir einen core View und übergeben Werte aus der Exception.
          */
