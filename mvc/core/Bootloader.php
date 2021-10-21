@@ -13,9 +13,13 @@ class Bootloader
     public function __construct()
     {
         /**
-         * @todo: comment
+         * Session starten
          */
         Session::init();
+        /**
+         * Daten aus den $_GET und $_POST Superglobals in die Session speichern. Das wird benötigt, damit die old()-
+         * Methode der Session Core Klasse funktioniert.
+         */
         Session::initSuperglobals();
 
         /**
