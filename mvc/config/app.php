@@ -8,7 +8,7 @@ return [
      *
      * bei euch: http://localhost/mvc/ od. sowas wie http://localhost/sae-wdd320/mvc/
      */
-    'baseurl' => 'localhost:8080/mvc/public',
+    'baseurl' => 'http://localhost:8080/mvc/public',
 
     /**
      * Um einzelne Funktionalitäten je nach Umgebung leicht umschalten zu können, führen wir eine Einstellung ein,
@@ -27,5 +27,10 @@ return [
      * Hier definieren wir eine Slug Form des Anwendungsnamens. Dieser wird beispielsweise in der Session Klasse
      * verwendet, um den Namen des Session Cookies zu setze.
      */
-    'app-slug' => 'sae-php-mvc-session'
+    'app-slug' => 'sae-php-mvc-session',
+
+    /**
+     * @todo: comment
+     */
+    'app-name' => 'SAE PHP Booking App'
 ];

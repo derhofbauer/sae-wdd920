@@ -82,7 +82,7 @@ class View
      * @param int     $httpResponseCode
      */
     public static function error(
-        string $template,
+        string $template = 'errors/exception',
         array $params = [],
         ?string $layout = null,
         bool $useCoreTemplates = true,

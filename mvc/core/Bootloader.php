@@ -28,6 +28,11 @@ class Bootloader
          */
         try {
             /**
+             * @todo: comment
+             */
+            define('BASE_URL', Config::get('app.baseurl'));
+
+            /**
              * Hier erstellen wir einen neuen Router und starten dann das Routing.
              */
             $router = new Router();

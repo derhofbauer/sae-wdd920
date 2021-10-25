@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'host' => 'localhost',
+    'host' => 'mariadb', // bei euch vermutlich localhost
     'user' => 'root',
-    'pass' => '',
-    'name' => 'mvc'
+    'password' => 'password', // bei euch vermutlich ''
+    'dbname' => 'mvc'
 ];
