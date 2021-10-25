@@ -21,12 +21,21 @@ class HomeController
 
 
     /**
-     * @todo: comment
+     * Alle Räume und Equipment auflisten
      */
     public function home()
     {
+        /**
+         * Alle Räume aus der Datenbank laden und von der Datenbank sortieren lassen.
+         */
         $rooms = Room::all('room_nr', 'ASC');
+        /**
+         * @todo: continue here!
+         */
 
+        /**
+         * View laden und Daten übergeben.
+         */
         View::render('home', [
             'rooms' => $rooms
         ]);

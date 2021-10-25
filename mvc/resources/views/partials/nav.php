@@ -15,7 +15,8 @@
             </ul>
             <?php
             /**
-             * @todo: comment whole block
+             * Ist ein*e User*in eingeloggt, so zeigen wir den Username an und einen Logout Button. Andernfalls einen
+             * Login Button.
              */
             if (\App\Models\User::isLoggedIn()):?>
                 <div class="d-flex">
@@ -25,10 +26,6 @@
             <?php else: ?>
                 <a class="btn btn-primary" href="<?php echo BASE_URL; ?>/login">Login</a>
             <?php endif; ?>
-            <!--<form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>-->
         </div>
     </div>
 </nav>

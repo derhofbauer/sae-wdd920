@@ -2,7 +2,19 @@
 
 return [
     /**
-     * Die baseurl wird benötigt um den <base>-Tag zu setzen, damit CSS, JS und IMG Imports immer von der selben URL
+     * Hier definieren wir den Namen der Anwendung. Das bietet uns die Möglichkeit einen zentralen String zu definieren,
+     * den wir dann beispielsweise für den <title>-Tag verwenden können.
+     */
+    'app-name' => 'SAE PHP Booking App',
+
+    /**
+     * Hier definieren wir eine Slug Form des Anwendungsnamens. Dieser wird beispielsweise in der Session Klasse
+     * verwendet, um den Namen des Session-Cookies zu setze.
+     */
+    'app-slug' => 'sae-php-mvc-session',
+
+    /**
+     * Die baseurl wird benötigt, um den <base>-Tag zu setzen, damit CSS, JS und IMG Imports immer von derselben URL
      * ausgehen und nicht von der aktuell im Browser aufgerufenen. Das ermöglicht es uns die src-Attribute relativ zu
      * setzen und die Files werden trotzdem absolut geladen.
      *
@@ -22,15 +34,4 @@ return [
      * bei denen die gesamte Seite von einem Werbekunden gebrandet wird, hilfreich sein.
      */
     'default-layout' => 'default',
-
-    /**
-     * Hier definieren wir eine Slug Form des Anwendungsnamens. Dieser wird beispielsweise in der Session Klasse
-     * verwendet, um den Namen des Session Cookies zu setze.
-     */
-    'app-slug' => 'sae-php-mvc-session',
-
-    /**
-     * @todo: comment
-     */
-    'app-name' => 'SAE PHP Booking App'
 ];

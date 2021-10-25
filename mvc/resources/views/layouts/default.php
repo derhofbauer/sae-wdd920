@@ -10,23 +10,18 @@
 <body>
 
 <?php
-/**
- * @todo: comment
- */
-require_once __DIR__ . '/../partials/nav.php';
-?>
+require_once __DIR__ . '/../partials/nav.php'; ?>
 
 <?php
-/**
- * @todo: comment
- */
-require_once __DIR__ . '/../partials/flashMessagesAndErrors.php';
-?>
+require_once __DIR__ . '/../partials/flashMessagesAndErrors.php'; ?>
 
 <div class="container">
     <?php
     /**
      * Das Layout erwartet eine Variable $templatePath, damit das Layout selbst das Template laden kann.
+     *
+     * In der View-Klasse definieren wir, welches Template geladen werden soll. Der eigentliche Vorgang des Ladens
+     * passiert hier.
      */
     require_once $templatePath; ?>
 </div>
