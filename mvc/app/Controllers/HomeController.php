@@ -29,9 +29,6 @@ class HomeController
          * Alle Räume aus der Datenbank laden und von der Datenbank sortieren lassen.
          */
         $rooms = Room::all('room_nr', 'ASC');
-        /**
-         * @todo: continue here!
-         */
 
         /**
          * View laden und Daten übergeben.

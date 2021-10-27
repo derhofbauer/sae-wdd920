@@ -35,7 +35,7 @@ class AuthController
     }
 
     /**
-     * Andernfalls laden wir das Login Formular.
+     * Daten aus Login Formular entgegennehmen und verarbeiten.
      */
     public function loginDo()
     {

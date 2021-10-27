@@ -17,11 +17,8 @@ abstract class AbstractModel
      * Hier definieren wir, dass jede Class, die das AbstractModel erweitert, auch eine save()-Methode definieren muss.
      *
      * @return bool
-     * @todo: properly implement this abstract method!
      */
-    public function save()
-    {
-    }
+    public abstract function save(): bool;
 
     /**
      * Alle Datensätze aus der Datenbank abfragen.
@@ -126,6 +123,33 @@ abstract class AbstractModel
     }
 
     /**
+     * @param array $data
+     *
+     * @return object
+     * @todo: comment
+     */
+    public function fill(array $data, bool $ignoreEmpty = true): object
+    {
+        /**
+         * 1) $data durchgehen
+         * 2) Gibt es eine Property zu den $data Werten?
+         *   Wenn ja: weiter, wenn nein: nix
+         * 3) Wert in Property mit Wert aus $data überschreiben
+         * 4) Fertiges Object zurückgeben
+         */
+        foreach ($data as $name => $value) {
+            if (property_exists($this, $name)) {
+                $trimmedValue = trim($value);
+                if ($ignoreEmpty !== true || !empty($value)) {
+                    $this->$name = $trimmedValue;
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Objekt löschen.
      *
      * @return bool
@@ -220,6 +244,19 @@ abstract class AbstractModel
          * Andernfalls geben wir das Objekt an Stelle 0 zurück, das in diesem Fall das einzige Objekt sein sollte.
          */
         return $objects[0];
+    }
+
+    /**
+     * @param Database $database
+     * @todo: comment
+     */
+    public function handleInsertResult(Database $database)
+    {
+        $newId = $database->getInsertId();
+
+        if (is_int($newId)) {
+            $this->id = $newId;
+        }
     }
 
     /**

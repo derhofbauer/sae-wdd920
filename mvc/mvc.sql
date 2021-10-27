@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Erstellungszeit: 25. Okt 2021 um 14:41
+-- Erstellungszeit: 27. Okt 2021 um 18:00
 -- Server-Version: 10.5.12-MariaDB-1:10.5.12+maria~focal
 -- PHP-Version: 7.4.20
 
@@ -85,8 +85,8 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `name`, `location`, `room_nr`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'VR Lounge', '2. Stock, rechts', 'vr-lounge', '2021-10-25 14:18:49', '2021-10-25 14:18:49', NULL),
-(2, 'Favoriten', '1. Stock, links im Eck', '2', '2021-10-25 14:18:49', '2021-10-25 14:18:49', NULL);
+(1, 'VR Lounge', '2. Stock, rechts', 'vr-lounge', '2021-10-25 14:18:49', '2021-10-27 17:50:13', NULL),
+(2, 'Ottakring', '1. Stock, links im Eck', '1', '2021-10-25 14:18:49', '2021-10-27 17:38:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -200,7 +200,8 @@ ALTER TABLE `equipments`
 -- Indizes für die Tabelle `rooms`
 --
 ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `rooms_room_nr_uindex` (`room_nr`);
 
 --
 -- Indizes für die Tabelle `rooms_room_features_mm`

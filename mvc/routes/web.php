@@ -7,6 +7,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
+use App\Controllers\RoomController;
 
 /**
  * Die Dateien im /routes Ordner beinhalten ein Mapping von einer URL auf eine eindeutige Controller & Action
@@ -33,7 +34,13 @@ return [
     /**
      * Home Route
      */
-    '/home' => [HomeController::class, 'home']
+    '/home' => [HomeController::class, 'home'],
+
+    /**
+     * Rooms Routes
+     */
+    '/rooms/{id}' => [RoomController::class, 'edit'],
+    '/rooms/{id}/update' => [RoomController::class, 'update'],
 
     // ...
 ];

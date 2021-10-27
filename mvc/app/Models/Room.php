@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Core\Database;
 use Core\Models\AbstractModel;
 use Core\Traits\SoftDelete;
 
@@ -40,4 +41,32 @@ class Room extends AbstractModel
     ) {
     }
 
+    /**
+     * @return bool
+     * @todo: comment
+     */
+    public function save(): bool
+    {
+        $database = new Database();
+        $tablename = self::getTablenameFromClassname();
+
+        if (!empty($this->id)) {
+            return $database->query("UPDATE $tablename SET name = ?, location = ?, room_nr = ? WHERE id = ?", [
+                's:name' => $this->name,
+                's:location' => $this->location,
+                's:room_nr' => $this->room_nr,
+                'i:id' => $this->id
+            ]);
+        } else {
+            $result = $database->query("INSERT INTO $tablename SET name = ?, location = ?, room_nr = ?", [
+                's:name' => $this->name,
+                's:location' => $this->location,
+                's:room_nr' => $this->room_nr
+            ]);
+
+            $this->handleInsertResult($database);
+
+            return $result;
+        }
+    }
 }

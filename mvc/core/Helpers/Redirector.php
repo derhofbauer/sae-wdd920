@@ -17,12 +17,20 @@ class Redirector
     /**
      * @param string|null $redirect
      */
-    public static function redirect(?string $redirect = null)
+    public static function redirect(?string $redirect = null, bool $useBaseUrl = true)
     {
         /**
          * Wurde eine Redirect-URL übergeben, leiten wir hier weiter.
          */
         if (!empty($redirect)) {
+            /**
+             * @todo: comment
+             */
+            if ($useBaseUrl === true) {
+                header("Location: " . BASE_URL . "$redirect");
+                exit;
+            }
+
             header("Location: $redirect");
             exit;
         }
