@@ -42,15 +42,34 @@ class Room extends AbstractModel
     }
 
     /**
+     * Objekt speichern.
+     *
+     * Wenn das Objekt bereits existiert hat, so wird es aktualisiert, andernfalls neu angelegt. Dadurch können wir eine
+     * einzige Funktion verwenden und müssen uns nicht darum kümmern, ob das Objekt angelegt oder aktualisiert werden
+     * muss.
+     *
      * @return bool
-     * @todo: comment
      */
     public function save(): bool
     {
+        /**
+         * Datenbankverbindung herstellen.
+         */
         $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
         $tablename = self::getTablenameFromClassname();
 
+        /**
+         * Hat das Objekt bereits eine id, so existiert in der Datenbank auch schon ein Eintrag dazu und wir können es
+         * aktualisieren.
+         */
         if (!empty($this->id)) {
+            /**
+             * Query ausführen und Ergebnis direkt zurückgeben. Das kann entweder true oder false sein, je nachdem ob
+             * der Query funktioniert hat oder nicht.
+             */
             return $database->query("UPDATE $tablename SET name = ?, location = ?, room_nr = ? WHERE id = ?", [
                 's:name' => $this->name,
                 's:location' => $this->location,
@@ -58,14 +77,25 @@ class Room extends AbstractModel
                 'i:id' => $this->id
             ]);
         } else {
+            /**
+             * Hat das Objekt keine id, so müssen wir es neu anlegen.
+             */
             $result = $database->query("INSERT INTO $tablename SET name = ?, location = ?, room_nr = ?", [
                 's:name' => $this->name,
                 's:location' => $this->location,
                 's:room_nr' => $this->room_nr
             ]);
 
+            /**
+             * Ein INSERT Query generiert eine neue id, diese müssen wir daher extra abfragen und verwenden daher die
+             * von uns geschrieben handleInsertResult()-Methode, die über das AbstractModel verfügbar ist.
+             */
             $this->handleInsertResult($database);
 
+            /**
+             * Ergebnis zurückgeben. Das kann entweder true oder false sein, je nachdem ob der Query funktioniert hat
+             * oder nicht.
+             */
             return $result;
         }
     }

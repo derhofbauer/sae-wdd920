@@ -40,7 +40,7 @@ class User extends AbstractUser
 
     /**
      * @return bool
-     * @todo: comment
+     * @todo: implement
      */
     public function save(): bool
     {

@@ -123,10 +123,13 @@ abstract class AbstractModel
     }
 
     /**
+     * Diese Methode ermöglicht es uns, jedes beliebige Model, das das AbstractModel erweitert, mit Daten aus einem
+     * Array (bspw. $_GET oder $_POST) zu befüllen.
+     *
      * @param array $data
+     * @param bool  $ignoreEmpty
      *
      * @return object
-     * @todo: comment
      */
     public function fill(array $data, bool $ignoreEmpty = true): object
     {
@@ -137,15 +140,32 @@ abstract class AbstractModel
          * 3) Wert in Property mit Wert aus $data überschreiben
          * 4) Fertiges Object zurückgeben
          */
+
+        /**
+         * Wir gehen alle Werte aus dem übergebenen Array durch.
+         */
         foreach ($data as $name => $value) {
+            /**
+             * Existiert zu dem Wert eine namensgleiche Property in dem Objekt ...
+             */
             if (property_exists($this, $name)) {
+                /**
+                 * ... so trimmen wir den Wert.
+                 */
                 $trimmedValue = trim($value);
+                /**
+                 * Ist der getrimmte Wert nicht leer oder möchten wir leere Werte nicht ignorieren, so überschreiben
+                 * wir die Property mit dem Wert aus dem Array.
+                 */
                 if ($ignoreEmpty !== true || !empty($value)) {
                     $this->$name = $trimmedValue;
                 }
             }
         }
 
+        /**
+         * Nun geben wir das aktualisierte Objekt zurück.
+         */
         return $this;
     }
 
@@ -247,14 +267,25 @@ abstract class AbstractModel
     }
 
     /**
+     * Wird ein INSERT-Query ausgeführt, so wird in den allermeisten Fällen auch eine neue ID generiert. Diese ist über
+     * die Datenbankverbindung abrufbar. Hier holen wir diese ID und aktualisieren das aktuelle Objekt mit der neuen ID.
+     *
      * @param Database $database
-     * @todo: comment
      */
     public function handleInsertResult(Database $database)
     {
+        /**
+         * Neu generierte id holen.
+         */
         $newId = $database->getInsertId();
 
+        /**
+         * Handelt es sich um einen Integer und wurde somit eine neue id vergeben ...
+         */
         if (is_int($newId)) {
+            /**
+             * ... aktualisieren wir das aktuelle Objekt mit diesem Wert.
+             */
             $this->id = $newId;
         }
     }
