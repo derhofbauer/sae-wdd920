@@ -198,7 +198,7 @@ abstract class AbstractUser extends AbstractModel
      * @return object|null
      * @throws Exception
      */
-    public static function getLoggedIn(): object|null
+    public static function getLoggedIn(): ?object
     {
         /**
          * Ist ein*e User*in eingeloggt, ...

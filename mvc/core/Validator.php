@@ -108,9 +108,9 @@ class Validator
              * Wenn es sich um einen numerischen Typ handelt, so prüfen wir nicht mit einer Regular Expression.
              */
             if ($this->isNumericType($type)) {
-                $this->validateNumeric($type, $value, $label);
+                $this->validateNumericType($type, $value, $label);
             } else {
-                $this->validateRegex($type, $value, $label);
+                $this->validateWithRegex($type, $value, $label);
             }
         }
     }
@@ -129,6 +129,7 @@ class Validator
 
     /**
      * Prüfe, ob ein
+     *
      * @param string $value
      * @param string $label
      * @param string $table

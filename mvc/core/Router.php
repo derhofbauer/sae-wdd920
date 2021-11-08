@@ -41,7 +41,7 @@ class Router
         /**
          * Route-Files laden.
          */
-        $webRoutes = require_once __DIR__ . '/../routes/web.php';
+        $webRoutes = require_once __DIR__ . '/../routes/web.php'; // bspw. /var/www/html/mvc/core/
         $apiRoutes = require_once __DIR__ . '/../routes/api.php';
 
         /**

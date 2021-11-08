@@ -39,8 +39,13 @@ return [
     /**
      * Rooms Routes
      */
+    '/rooms' => [HomeController::class, 'home'], // @todo: create separate View!
     '/rooms/{id}' => [RoomController::class, 'edit'],
     '/rooms/{id}/update' => [RoomController::class, 'update'],
+    '/rooms/{id}/delete' => [RoomController::class, 'delete'],
+    '/rooms/{id}/delete/confirm' => [RoomController::class, 'deleteConfirm'],
+    '/rooms/create' => [RoomController::class, 'create'],
+    '/rooms/store' => [RoomController::class, 'store'],
 
     // ...
 ];

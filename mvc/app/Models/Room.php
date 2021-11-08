@@ -31,13 +31,13 @@ class Room extends AbstractModel
          *
          * Im Prinzip definieren wir alle Spalten aus der Tabelle mit dem richtigen Datentyp.
          */
-        public int $id,
-        public string $name,
-        public ?string $location,
-        public string $room_nr,
-        public string $created_at,
-        public string $updated_at,
-        public ?string $deleted_at
+        public ?int $id = null,
+        public string $name = '',
+        public ?string $location = null,
+        public string $room_nr = '',
+        public string $created_at = '',
+        public string $updated_at = '',
+        public ?string $deleted_at = null
     ) {
     }
 
