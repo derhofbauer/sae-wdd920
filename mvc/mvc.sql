@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Erstellungszeit: 27. Okt 2021 um 18:00
+-- Erstellungszeit: 08. Nov 2021 um 16:42
 -- Server-Version: 10.5.12-MariaDB-1:10.5.12+maria~focal
 -- PHP-Version: 7.4.20
 
@@ -86,7 +86,9 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`id`, `name`, `location`, `room_nr`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'VR Lounge', '2. Stock, rechts', 'vr-lounge', '2021-10-25 14:18:49', '2021-10-27 17:50:13', NULL),
-(2, 'Ottakring', '1. Stock, links im Eck', '1', '2021-10-25 14:18:49', '2021-10-27 17:38:38', NULL);
+(2, 'Ottakring', '1. Stock, links im Eck', 'HSG-8', '2021-10-25 14:18:49', '2021-11-08 14:13:39', NULL),
+(3, 'Simmering', '1. Stock links', 'HSG-2', '2021-11-08 15:26:54', '2021-11-08 15:27:03', NULL),
+(4, 'Projektraum Schlosspark', '2. Stock, Bibliothek', '14', '2021-11-08 15:28:44', '2021-11-08 16:17:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -201,7 +203,8 @@ ALTER TABLE `equipments`
 --
 ALTER TABLE `rooms`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `rooms_room_nr_uindex` (`room_nr`);
+  ADD UNIQUE KEY `rooms_room_nr_uindex` (`room_nr`),
+  ADD KEY `rooms_location_index` (`location`(768));
 
 --
 -- Indizes für die Tabelle `rooms_room_features_mm`
@@ -251,7 +254,7 @@ ALTER TABLE `equipments`
 -- AUTO_INCREMENT für Tabelle `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT für Tabelle `rooms_room_features_mm`
