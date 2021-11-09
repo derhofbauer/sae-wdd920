@@ -26,7 +26,9 @@ class RoomController
     public function edit(int $id)
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
@@ -47,11 +49,15 @@ class RoomController
      * Formulardaten aus dem Bearbeitungsformular entgegennehmen und verarbeiten.
      *
      * @param int $id
+     *
+     * @throws \Exception
      */
     public function update(int $id)
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
@@ -114,12 +120,16 @@ class RoomController
     }
 
     /**
-     * @todo: comment
+     * Erstellungsformular anzeigen
+     *
+     * @throws \Exception
      */
     public function create()
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
@@ -130,12 +140,16 @@ class RoomController
     }
 
     /**
-     * @todo: comment
+     * Formulardaten aus dem Erstellungsformular entgegennehmen und verarbeiten.
+     *
+     * @throws \Exception
      */
     public function store()
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
@@ -169,7 +183,7 @@ class RoomController
         }
 
         /**
-         * @todo: comment
+         * Neuen Room erstellen und mit den Daten aus dem Formular befüllen.
          */
         $room = new Room();
         $room->fill($_POST);
@@ -192,22 +206,33 @@ class RoomController
     }
 
     /**
-     * @todo: comment
+     * Confirmation Page für die Löschung eines Raumes laden.
+     *
+     * @param int $id
+     *
+     * @throws \Exception
      */
     public function delete(int $id)
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * 1. Raum aus DB laden
-         * 2. Confirmation Page laden
+         * Raum, der gelöscht werden soll, aus der DB laden.
          */
-
         $room = Room::findOrFail($id);
 
+        /**
+         * View laden und relativ viele Daten übergeben. Die große Anzahl an Daten entsteht dadurch, dass der
+         * helpers/confirmation-View so dynamisch wie möglich sein soll, damit wir ihn für jede Delete Confirmation
+         * Seite verwenden können, unabhängig vom Objekt, das gelöscht werden soll. Wir übergeben daher einen Typ und
+         * einen Titel, die für den Text der Confirmation verwendet werden, und zwei URLs, eine für den
+         * Bestätigungsbutton und eine für den Abbrechen-Button.
+         */
         View::render('helpers/confirmation', [
             'objectType' => 'Raum',
             'objectTitle' => $room->name,
@@ -217,25 +242,37 @@ class RoomController
     }
 
     /**
-     * @todo: comment
+     * Raum löschen.
+     *
+     * @param int $id
+     *
+     * @throws \Exception
      */
     public function deleteConfirm(int $id)
     {
         /**
-         * @todo: comment
+         * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
+         * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
+         * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
          */
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * 1. Raum, der gelöscht werden soll, aus DB laden
-         * 2. Raum löschen
-         * 3. Meldung ausgeben
-         * 4. Redirect
+         * Raum, der gelöscht werden soll, aus DB laden.
          */
         $room = Room::findOrFail($id);
+        /**
+         * Raum löschen.
+         */
         $room->delete();
 
+        /**
+         * Erfolgsmeldung für später in die Session speichern.
+         */
         Session::set('success', ['Raum erfolgreich gelöscht.']);
+        /**
+         * Weiterleiten zur Home Seite.
+         */
         Redirector::redirect('/home');
     }
 
