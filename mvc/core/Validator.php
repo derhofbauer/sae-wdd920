@@ -134,10 +134,14 @@ class Validator
      * @param string $label
      * @param string $table
      * @param string $column
+     * @param int    $ignoreThisId Soll ein Eintrag aktualisiert werden, so muss die Unique-Prüfung auf alle anderen
+     *                             Einträge ausgeführt werden und den aktuellen Eintrag ignorieren, da sonst ein
+     *                             Validierungsfehler passieren würde, wenn der Wert in der Unique-Spalte für den zu
+     *                             aktualisierenden Eintrag nicht geändert werden soll.
      *
      * @return bool
      */
-    public function unique(string $value, string $label, string $table, string $column): bool
+    public function unique(string $value, string $label, string $table, string $column, int $ignoreThisId = 0): bool
     {
         /**
          * Datenbankverbindung herstellen.
@@ -147,8 +151,9 @@ class Validator
         /**
          * Datenbank-Query bauen und counten, ob es schon ein Element mit $value in $column gibt.
          */
-        $result = $database->query("SELECT COUNT(*) AS count FROM $table WHERE $column = ?", [
-            's:value' => $value
+        $result = $database->query("SELECT COUNT(*) AS count FROM $table WHERE $column = ? AND id != ?", [
+            's:value' => $value,
+            'i:id' => $ignoreThisId
         ]);
 
         /**

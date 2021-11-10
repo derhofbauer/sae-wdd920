@@ -1,5 +1,6 @@
 <!-- @todo: implement helper function for BASE_URL url generation -->
-<form action="<?php echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post">
+<form action="<?php
+echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post">
 
     <div class="row">
         <div class="col">
@@ -19,19 +20,36 @@
         </div>
     </div>
 
-    <div class="form-group mt-1">
-        <label for="location">Location</label>
-        <textarea name="location" id="location" class="form-control" placeholder="Location"><?php
-            echo $room->location; ?></textarea>
+    <div class="row">
+        <div class="col">
+            <div class="form-group mt-1">
+                <label for="location">Location</label>
+                <textarea name="location" id="location" class="form-control" placeholder="Location"><?php
+                    echo $room->location; ?></textarea>
+            </div>
+        </div>
+
+        <div class="col">
+            <label for="room-features">Room Features</label>
+            <?php
+            /**
+             * @todo: set pre-checked automatically
+             */
+            foreach ($roomFeatures as $roomFeature): ?>
+                <div class="form-check">
+                    <input type="checkbox" value="<?php echo $roomFeature->id; ?>" name="room-features[]" id="room-features[<?php echo $roomFeature->id; ?>]" class="form-check-input">
+                    <label class="form-check-label" for="room-features[<?php echo $roomFeature->id; ?>]"><?php echo $roomFeature->name; ?></label>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 
-    <!-- @todo: implement equipment dropdown -->
+    <!-- @todo: implement room feature dropdown -->
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>
-        <!-- @todo: change button route to rooms->index -->
         <a href="<?php
-        echo BASE_URL . '/home'; ?>" class="btn btn-danger">Cancel</a>
+        echo BASE_URL . '/rooms'; ?>" class="btn btn-danger">Cancel</a>
     </div>
 
 </form>

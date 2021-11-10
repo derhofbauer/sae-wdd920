@@ -22,13 +22,12 @@
         <textarea name="location" id="location" class="form-control" placeholder="Location"></textarea>
     </div>
 
-    <!-- @todo: implement equipment dropdown -->
+    <!-- @todo: implement room feature dropdown -->
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>
-        <!-- @todo: change button route to rooms->index -->
         <a href="<?php
-        echo BASE_URL . '/home'; ?>" class="btn btn-danger">Cancel</a>
+        echo BASE_URL . '/rooms'; ?>" class="btn btn-danger">Cancel</a>
     </div>
 
 </form>

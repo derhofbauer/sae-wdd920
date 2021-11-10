@@ -10,6 +10,16 @@ kopiert werden.
 Um alle benötigten Abhängigkeiten (SASS & UglifyJS) zu installieren, muss `npm install` ausgeführt werden. Für einen vollständigen
 Build kann `npm run build` verwendet werden.
 
+Wichtig: Node.js muss installiert sein. S. https://nodejs.org/en/
+
+## Misc.
+
+### 3 Schritte, um ein neues Feature zu erstellen
+
+1. Route anlegen
+2. Controller bzw. Action anlegen
+3. View laden bzw. Redirect (zu einem bereits existierenden View)
+
 ## Ordner
 
 Die Ordnerstruktur ist zwar nicht Teil des MVC, wird aber vom MVC vorgegeben.

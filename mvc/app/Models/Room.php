@@ -14,6 +14,8 @@ use Core\Traits\SoftDelete;
 class Room extends AbstractModel
 {
 
+    const TABLENAME_ROOMFEATURES_MM = 'rooms_room_features_mm';
+
     /**
      * Wir innerhalb einer Klasse das use-Keyword verwendet, so wird damit ein Trait importiert. Das kann man sich
      * vorstellen wie einen Import mittels require, weil die Methoden, die im Trait definiert sind, einfach in die
@@ -37,7 +39,8 @@ class Room extends AbstractModel
         public string $room_nr = '',
         public string $created_at = '',
         public string $updated_at = '',
-        public ?string $deleted_at = null
+        public ?string $deleted_at = null,
+        private array $_roomFeatures = []
     ) {
     }
 
@@ -70,12 +73,19 @@ class Room extends AbstractModel
              * Query ausführen und Ergebnis direkt zurückgeben. Das kann entweder true oder false sein, je nachdem ob
              * der Query funktioniert hat oder nicht.
              */
-            return $database->query("UPDATE $tablename SET name = ?, location = ?, room_nr = ? WHERE id = ?", [
+            $result = $database->query("UPDATE $tablename SET name = ?, location = ?, room_nr = ? WHERE id = ?", [
                 's:name' => $this->name,
                 's:location' => $this->location,
                 's:room_nr' => $this->room_nr,
                 'i:id' => $this->id
             ]);
+
+            /**
+             * Raum Feature Daten aus $this->_roomFeatures speichern.
+             */
+            $this->saveRoomFeatures();
+
+            return $result;
         } else {
             /**
              * Hat das Objekt keine id, so müssen wir es neu anlegen.
@@ -85,6 +95,11 @@ class Room extends AbstractModel
                 's:location' => $this->location,
                 's:room_nr' => $this->room_nr
             ]);
+
+            /**
+             * Raum Feature Daten aus $this->_roomFeatures speichern.
+             */
+            $this->saveRoomFeatures();
 
             /**
              * Ein INSERT Query generiert eine neue id, diese müssen wir daher extra abfragen und verwenden daher die
@@ -98,5 +113,152 @@ class Room extends AbstractModel
              */
             return $result;
         }
+    }
+
+    /**
+     * Setter für die Room Features.
+     *
+     * @param array $roomFeatures
+     *
+     * @return array
+     */
+    public function setRoomFeatures(array $roomFeatures): array
+    {
+        $this->_roomFeatures = $roomFeatures;
+
+        return $this->_roomFeatures;
+    }
+
+    /**
+     * Neue Liste an verknüpften Raum Features zuweisen.
+     */
+    private function saveRoomFeatures()
+    {
+        /**
+         * Zunächst holen wir uns die aktuell zugewiesenen Raum Features aus der Datenbank.
+         */
+        $oldRoomFeatures = $this->roomFeatures();
+
+        /**
+         * Dann bereiten wir uns zwei Arrays vor, damit wir die zu löschenden Zuweisungen und jene, die unverändert
+         * bleiben sollen, speichern können. Daraus ergibt sich, dass alle weiteren, die in $this->_roomFeatures
+         * vorhanden sind, neu angelegt werden müssen.
+         */
+        $roomFeaturesToDelete = [];
+        $roomFeaturesToNotBeTouched = [];
+
+        /**
+         * Nun gehen wir alle alten Zuweisungen durch ...
+         */
+        foreach ($oldRoomFeatures as $oldRoomFeature) {
+            /**
+             * ... und prüfen, ob sie auch in den neuen Raum Features vorkommen sollen.
+             */
+            if (!in_array($oldRoomFeature->id, $this->_roomFeatures)) {
+                /**
+                 * Wenn nein, soll die Zuweisung gelöscht werden.
+                 */
+                $roomFeaturesToDelete[] = $oldRoomFeature->id;
+            } else {
+                /**
+                 * Wenn ja, soll sie weiterhin bestehen bleiben.
+                 */
+                $roomFeaturesToNotBeTouched[] = $oldRoomFeature->id;
+            }
+        }
+
+        /**
+         * Nun berechnen wir uns die Differenz der drei Arrays, wobei alle Werte aus dem ersten Array das Ergebnis
+         * bilden, die in keinem der weiteren Arrays vorhanden sind. Diese RoomFeatures müssen neu zugewiesen werden.
+         */
+        $roomFeaturesToAdd = array_diff($this->_roomFeatures, $roomFeaturesToDelete, $roomFeaturesToNotBeTouched);
+
+        /**
+         * Nun gehen wir alle zu löschenden und neu anzulegenden RoomFeature Verbindungen durch und führen die
+         * entsprechende Aktion aus.
+         */
+        foreach ($roomFeaturesToDelete as $roomFeatureToDelete) {
+            $this->detachRoomFeature($roomFeatureToDelete);
+        }
+        foreach ($roomFeaturesToAdd as $roomFeatureToAdd) {
+            $this->attachRoomFeature($roomFeatureToAdd);
+        }
+    }
+
+    /**
+     * Relation zu RoomFeatures
+     *
+     * @return array
+     */
+    public function roomFeatures(): array
+    {
+        /**
+         * Über das RoomFeature Model alle zugehörigen RoomFeatures abrufen.
+         */
+        return RoomFeature::findByRoom($this->id);
+    }
+
+    /**
+     * Verknüpfung zu einem RoomFeature aufheben.
+     *
+     * @param int $roomFeatureId
+     *
+     * @return bool
+     */
+    public function detachRoomFeature(int $roomFeatureId): bool
+    {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::TABLENAME_ROOMFEATURES_MM;
+
+        /**
+         * Query ausführen.
+         */
+        $result = $database->query("DELETE FROM $tablename WHERE room_id = ? AND room_feature_id = ?", [
+            'i:room_id' => $this->id,
+            'i:room_feature_id' => $roomFeatureId
+        ]);
+
+        /**
+         * Datenbankergebnis verarbeiten und zurückgeben.
+         */
+        return $result;
+    }
+
+    /**
+     * Verknüpfung zu einem RoomFeature herstellen.
+     *
+     * @param int $roomFeatureId
+     *
+     * @return bool
+     */
+    public function attachRoomFeature(int $roomFeatureId): bool
+    {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::TABLENAME_ROOMFEATURES_MM;
+
+        /**
+         * Query ausführen.
+         */
+        $result = $database->query("INSERT INTO $tablename SET room_id = ?, room_feature_id = ?", [
+            'i:room_id' => $this->id,
+            'i:room_feature_id' => $roomFeatureId
+        ]);
+
+        /**
+         * Datenbankergebnis verarbeiten und zurückgeben.
+         */
+        return $result;
     }
 }

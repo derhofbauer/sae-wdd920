@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Room;
 use App\Models\RoomFeature;
 use Core\Helpers\Redirector;
 use Core\Middlewares\AuthMiddleware;
@@ -11,9 +10,12 @@ use Core\Validator;
 use Core\View;
 
 /**
- * Room Controller
+ * RoomFeature Controller
+ *
+ * Disclaimer: Nachdem dieser Controller kopiert wurde, kann es sein, dass manchmal Room/Raum in den Kommentaren
+ * erwähnt wird, obwohl RoomFeature/Raum Feature erwähnt sein sollte.
  */
-class RoomController
+class RoomFeatureController
 {
 
     /**
@@ -24,16 +26,15 @@ class RoomController
         /**
          * Alle Objekte über das Model aus der Datenbank laden.
          */
-        $rooms = Room::all();
+        $roomFeatures = RoomFeature::all();
 
         /**
          * View laden und Daten übergeben.
          */
-        View::render('rooms/index', [
-            'rooms' => $rooms
+        View::render('room_features/index', [
+            'roomFeatures' => $roomFeatures
         ]);
     }
-
 
     /**
      * Bearbeitungsformular anzeigen
@@ -54,19 +55,13 @@ class RoomController
         /**
          * Gewünschtes Element über das zugehörige Model aus der Datenbank laden.
          */
-        $room = Room::findOrFail($id);
-
-        /**
-         * Alle Room Features aus der Datenbank laden, damit wir im View Checkboxen generieren können.
-         */
-        $roomFeatures = RoomFeature::all();
+        $roomFeature = RoomFeature::findOrFail($id);
 
         /**
          * View laden und Daten übergeben.
          */
-        View::render('rooms/edit', [
-            'room' => $room,
-            'roomFeatures' => $roomFeatures
+        View::render('room_features/edit', [
+            'roomFeature' => $roomFeature
         ]);
     }
 
@@ -98,7 +93,7 @@ class RoomController
          * Nachdem wir exakt dieselben Validierungen durchführen für update und create, können wir sie in eine eigene
          * Methode auslagern und überall dort verwenden, wo wir sie brauchen.
          */
-        $validationErrors = $this->validateFormData($id);
+        $validationErrors = $this->validateFormData();
 
         /**
          * Sind Validierungsfehler aufgetreten ...
@@ -112,7 +107,7 @@ class RoomController
              * ... und leiten zurück zum Bearbeitungsformular. Der Code weiter unten in dieser Funktion wird dadurch
              * nicht mehr ausgeführt.
              */
-            Redirector::redirect("/rooms/${id}");
+            Redirector::redirect("/room-features/${id}");
         }
 
         /**
@@ -120,41 +115,28 @@ class RoomController
          * dem AbstractModel, die einen 404 Fehler ausgibt, wenn das Objekt nicht gefunden wird. Dadurch sparen wir uns
          * hier zu prüfen, ob ein Post gefunden wurde oder nicht.
          */
-        $room = Room::findOrFail($id);
+        $roomFeatures = RoomFeature::findOrFail($id);
 
         /**
          * Sind keine Fehler aufgetreten legen aktualisieren wir die Werte des vorher geladenen Objekts ...
          */
-        $room->fill($_POST);
-
-        /**
-         * RoomFeature Selections speichern.
-         *
-         * Wurden Raum Features im Formular ausgewählt, so holen wir hier die gewählten IDs und überschreiben die
-         * aktuell verknüpften Raum Features. Andernfalls löschen wir alle Zuweisung, weil alle Checkboxen
-         * abgewählt wurden.
-         */
-        if (isset($_POST['room-features'])) {
-            $room->setRoomFeatures($_POST['room-features']);
-        } else {
-            $room->setRoomFeatures([]);
-        }
+        $roomFeatures->fill($_POST);
 
         /**
          * Schlägt die Speicherung aus irgendeinem Grund fehl ...
          */
-        if (!$room->save()) {
+        if (!$roomFeatures->save()) {
             /**
              * ... so speichern wir einen Fehler in die Session und leiten wieder zurück zum Bearbeitungsformular.
              */
             Session::set('errors', ['Speichern fehlgeschlagen.']);
-            Redirector::redirect("/rooms/${id}");
+            Redirector::redirect("/room-features/${id}");
         }
 
         /**
          * Wenn alles funktioniert hat, leiten wir zurück zur /home-Route.
          */
-        Redirector::redirect('/home');
+        Redirector::redirect('/room-features');
     }
 
     /**
@@ -164,7 +146,7 @@ class RoomController
      */
     public function create()
     {
-        /**
+        /**http://localhost:8080/mvc/public/room-features
          * Prüfen, ob ein*e User*in eingeloggt ist und ob diese*r eingeloggte User*in Admin ist. Wenn nicht, geben wir
          * einen Fehler 403 Forbidden zurück. Dazu haben wir eine Art Middleware geschrieben, damit wir nicht immer
          * dasselbe if-Statement kopieren müssen, sondern einfach diese Funktion aufrufen können.
@@ -174,7 +156,7 @@ class RoomController
         /**
          * View laden.
          */
-        View::render('rooms/create');
+        View::render('room_features/create');
     }
 
     /**
@@ -217,30 +199,30 @@ class RoomController
              * ... und leiten zurück zum Bearbeitungsformular. Der Code weiter unten in dieser Funktion wird dadurch
              * nicht mehr ausgeführt.
              */
-            Redirector::redirect("/rooms/create");
+            Redirector::redirect("/room-features/create");
         }
 
         /**
          * Neuen Room erstellen und mit den Daten aus dem Formular befüllen.
          */
-        $room = new Room();
-        $room->fill($_POST);
+        $roomFeature = new RoomFeature();
+        $roomFeature->fill($_POST);
 
         /**
          * Schlägt die Speicherung aus irgendeinem Grund fehl ...
          */
-        if (!$room->save()) {
+        if (!$roomFeature->save()) {
             /**
              * ... so speichern wir einen Fehler in die Session und leiten wieder zurück zum Bearbeitungsformular.
              */
             Session::set('errors', ['Speichern fehlgeschlagen.']);
-            Redirector::redirect("/rooms/create");
+            Redirector::redirect("/room-features/create");
         }
 
         /**
          * Wenn alles funktioniert hat, leiten wir zurück zur /home-Route.
          */
-        Redirector::redirect('/home');
+        Redirector::redirect('/room-features');
     }
 
     /**
@@ -262,7 +244,7 @@ class RoomController
         /**
          * Raum, der gelöscht werden soll, aus der DB laden.
          */
-        $room = Room::findOrFail($id);
+        $roomFeature = RoomFeature::findOrFail($id);
 
         /**
          * View laden und relativ viele Daten übergeben. Die große Anzahl an Daten entsteht dadurch, dass der
@@ -272,10 +254,10 @@ class RoomController
          * Bestätigungsbutton und eine für den Abbrechen-Button.
          */
         View::render('helpers/confirmation', [
-            'objectType' => 'Raum',
-            'objectTitle' => $room->name,
-            'confirmUrl' => BASE_URL . '/rooms/' . $room->id . '/delete/confirm',
-            'abortUrl' => BASE_URL . '/rooms'
+            'objectType' => 'Raum Feature',
+            'objectTitle' => $roomFeature->name,
+            'confirmUrl' => BASE_URL . '/room-features/' . $roomFeature->id . '/delete/confirm',
+            'abortUrl' => BASE_URL . '/room-features'
         ]);
     }
 
@@ -298,30 +280,28 @@ class RoomController
         /**
          * Raum, der gelöscht werden soll, aus DB laden.
          */
-        $room = Room::findOrFail($id);
+        $roomFeature = RoomFeature::findOrFail($id);
         /**
          * Raum löschen.
          */
-        $room->delete();
+        $roomFeature->delete();
 
         /**
          * Erfolgsmeldung für später in die Session speichern.
          */
-        Session::set('success', ['Raum erfolgreich gelöscht.']);
+        Session::set('success', ['Raum Feature erfolgreich gelöscht.']);
         /**
          * Weiterleiten zur Home Seite.
          */
-        Redirector::redirect('/home');
+        Redirector::redirect('/room-features');
     }
 
     /**
      * Validierungen kapseln, damit wir sie überall dort, wo wir derartige Objekte validieren müssen, verwenden können.
      *
-     * @param int $id Wird dieser Wert übergeben, so ignoriert die unique Methode den Eintrag mit der übergebenen ID.
-     *
      * @return array
      */
-    private function validateFormData(int $id = 0): array
+    private function validateFormData(): array
     {
         /**
          * Neues Validator Objekt erstellen.
@@ -338,18 +318,7 @@ class RoomController
              * Hier verwenden wir "named params", damit wir einzelne Funktionsparameter überspringen können.
              */
             $validator->textnum($_POST['name'], label: 'Name', required: true, max: 255);
-            $validator->textnum($_POST['location'], label: 'Location');
-            $validator->alphanumeric($_POST['room_nr'], label: 'Room Number', required: true, max: 10, min: 1);
-            $validator->unique(
-                $_POST['room_nr'],
-                label: 'Room Number',
-                table: Room::getTablenameFromClassname(),
-                column: 'room_nr',
-                ignoreThisId: $id
-            );
-            /**
-             * @todo: implement Validate Array + Contents
-             */
+            $validator->textnum($_POST['description'], label: 'Description', max: 255);
         }
 
         /**

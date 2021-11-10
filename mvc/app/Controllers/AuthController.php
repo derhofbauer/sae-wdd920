@@ -25,7 +25,7 @@ class AuthController
          * Startseite weiter.
          */
         if (User::isLoggedIn()) {
-            Redirector::redirect(BASE_URL . '/home');
+            Redirector::redirect('/home');
         }
 
         /**
@@ -81,7 +81,7 @@ class AuthController
             /**
              * Wenn ja: weiter.
              */
-            $user->login(BASE_URL . '/home');
+            $user->login('/home');
         }
 
         /**
@@ -91,7 +91,7 @@ class AuthController
          * an und löschen sie in der Session wieder.
          */
         Session::set('errors', $errors);
-        Redirector::redirect(BASE_URL . '/login');
+        Redirector::redirect('/login');
     }
 
     /**
@@ -99,7 +99,7 @@ class AuthController
      */
     public function logout()
     {
-        User::logout(BASE_URL);
+        User::logout('/');
     }
 
 }
