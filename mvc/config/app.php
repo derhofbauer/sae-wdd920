@@ -36,12 +36,13 @@ return [
     'default-layout' => 'default',
 
     /**
-     * @todo: comment
+     * Upload Limit (Dateigröße) definieren. Dieses kann größer oder kleiner sein als das in PHP definierte Uploadlimit.
+     * Ist es größer als das PHP Limit, so greift das PHP Limit.
      */
-    'max-upload-size' => 1024 * 1024 * 10,
+    'max-upload-size' => 1024 * 1024 * 10, // 10MB
 
     /**
-     * @todo: comment (relative to storage folder)
+     * Wo sollen hochgeladene Dateien hingespeichert werden? Der Pfad ist relativ zum 'storage' Ordner.
      */
     'uploads-folder' =>'/uploads'
 ];

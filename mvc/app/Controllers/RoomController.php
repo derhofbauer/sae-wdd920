@@ -129,11 +129,11 @@ class RoomController
         $room->fill($_POST);
 
         /**
-         * Hochgeladene Dateien verarbeiten
+         * Hochgeladene Dateien verarbeiten.
          */
         $room = $this->handleUploadedFiles($room);
         /**
-         * @todo: comment
+         * Checkboxen verarbeiten, ob eine Datei gelöscht werden soll oder nicht.
          */
         $room = $this->handleDeleteFiles($room);
 
@@ -376,35 +376,64 @@ class RoomController
     }
 
     /**
-     * @param object|null $room
+     * Hochgeladene Dateien verarbeiten.
      *
-     * @throws \Exception
-     * @todo: comment
+     * @param Room $room
+     *
+     * @return Room|null
      */
     public function handleUploadedFiles(Room $room): ?Room
     {
+        /**
+         * Wir erstellen zunächst einen Array an Objekten, damit wir Logik, die zu einer Datei gehört, in diesen
+         * Objekten kapseln können.
+         */
         $files = AbstractFile::createFromUploadedFiles('images');
 
+        /**
+         * Nun gehen wir alle Dateien durch ...
+         */
         foreach ($files as $file) {
+            /**
+             * ... speichern sie in den Uploads Ordner ...
+             */
             $storagePath = $file->putToUploadsFolder();
+            /**
+             * ... und verknüpfen sie mit dem Raum.
+             */
             $room->addImages([$storagePath]);
         }
+        /**
+         * Nun geben wir den aktualisierten Raum wieder zurück.
+         */
         return $room;
     }
 
 
     /**
-     * @param Room|null $room
+     * Löschen-Checkboxen der Bilder eines Raumes verarbeiten.
+     *
+     * @param Room $room
      *
      * @return Room
-     * @todo: comment
      */
-    private function handleDeleteFiles(?Room $room): Room
+    private function handleDeleteFiles(Room $room): Room
     {
+        /**
+         * Wir prüfen, ob eine der Checkboxen angehakerlt wurde.
+         */
         if (isset($_POST['delete-images'])) {
+            /**
+             * Wenn ja, gehen wir alle Checkboxen durch ...
+             */
             foreach ($_POST['delete-images'] as $deleteImage) {
+                /**
+                 * Lösen die Verknüpfung zum Room ...
+                 */
                 $room->removeImages([$deleteImage]);
-
+                /**
+                 * ... und löschen die Datei aus dem Uploads-Ordner.
+                 */
                 AbstractFile::delete($deleteImage);
             }
         }

@@ -5,7 +5,12 @@ namespace Core\Models;
 use Core\Config;
 
 /**
- * @todo: comment
+ * Class AbstractFile
+ *
+ * Damit wir eine Abstraktionsebene über das Dateisystem legen können, bauen wir eine eigene Klasse, die die Arbeit mit
+ * einzelnen Dateien vereinfachen soll.
+ *
+ * @package Core\Models
  */
 class AbstractFile
 {
@@ -29,12 +34,33 @@ class AbstractFile
         return ($_FILES[$keyInSuperglobal]['error'][0] !== UPLOAD_ERR_NO_FILE);
     }
 
+    /**
+     * AbstractFile Objekte aus den Daten aus der $_FILES Superglobal erstellen.
+     *
+     * @param string $keyInSuperglobal Name des Upload Feldes im Formular
+     *
+     * @return array
+     */
     public static function createFromUploadedFiles(string $keyInSuperglobal): array
     {
+        /**
+         * Daten zu einem bestimmten Upload Feld aus $_FILES holen.
+         */
         $files = $_FILES[$keyInSuperglobal];
+
+        /**
+         * Wurden überhaupt Dateien hochgeladen?
+         */
         if (self::filesHaveBeenUploaded($keyInSuperglobal)) {
+            /**
+             * Liste vorbereiten.
+             */
             $filesObjects = [];
 
+            /**
+             * Alle Dateinamen durchgehen und über den zugehörigen $key alle Daten in ein jeweils neues AbstractFile
+             * füllen.
+             */
             foreach ($files['name'] as $key => $name) {
                 $file = new AbstractFile(
                     $name,
@@ -46,45 +72,101 @@ class AbstractFile
                 $filesObjects[] = $file;
             }
 
+            /**
+             * Liste der generierten File Objekte zurückgeben.
+             */
             return $filesObjects;
         }
+        /**
+         * Leeres Array zurückgeben, wenn keine Dateien hochgeladen wurden.
+         */
         return [];
     }
 
+    /**
+     * Datei an in den Uploads Ordner speichern.
+     *
+     * @return string Filepath, an den das File gespeichert wurde
+     *
+     * @throws \Exception
+     */
     public function putToUploadsFolder(): string
     {
+        /**
+         * Zielpfad holen.
+         */
         $destinationPath = $this->getDestinationPath();
+        /**
+         * Temporäre Datei verschieben.
+         */
         if (move_uploaded_file($this->tmp_name, $destinationPath)) {
+            /**
+             * Hat alles funktioniert, berechnen wir einen relativen Pfad der Datei und geben ihn zurück.
+             */
             return self::relativeUploadPathFromAbsolutePath($destinationPath);
         } else {
+            /**
+             * Andernfalls werfen wir einen Fehler.
+             */
             throw new \Exception('Uploaded files can not be stored.');
         }
     }
 
+    /**
+     * Zielpfad berechnen.
+     *
+     * @return string
+     */
     private function getDestinationPath(): string
     {
+        /**
+         * Uploads Ordner aus Config holen.
+         */
         $uploadsFolder = Config::get('app.uploads-folder');
 
+        /**
+         * Storage Pfad holen und Ziel Pfad berechnen.
+         */
         $storageFolder = self::getStoragePath();
         $destinationPath = realpath("{$storageFolder}/{$uploadsFolder}/");
         $destinationName = time() . "_{$this->name}";
 
+        /**
+         * Fertigen Zielpfad zurückgeben.
+         */
         return "{$destinationPath}/{$destinationName}";
     }
 
     /**
+     * Absoluten Pfad in einen Pfad relativ zum Storage Ordner umrechnen.
+     *
      * @param string $absolutePath
      *
      * @return string
-     * @todo: comment
      */
     static function relativeUploadPathFromAbsolutePath(string $absolutePath): string
     {
+        /**
+         * Uploads Ordner aus der Config holen.
+         */
         $uploadsFolder = Config::get('app.uploads-folder');
+        /**
+         * Prüfen, wo der $uploadsFolder im absoluten Pfad anfängt ...
+         */
         $uploadsFolderStrpos = strpos($absolutePath, $uploadsFolder);
+        /**
+         * ... und den String bis dahin kürzen.
+         */
         $relativePath = substr($absolutePath, $uploadsFolderStrpos);
+        /**
+         * "storage/" entfernen, falls es noch dabei sein sollte. Dadurch können dir das Bild ganz einfach im HTML
+         * verwenden.
+         */
         $relativePathWithoutStorage = str_replace('storage/', '', $relativePath);
 
+        /**
+         * Berechneten Pfad zurück geben.
+         */
         return $relativePathWithoutStorage;
     }
 

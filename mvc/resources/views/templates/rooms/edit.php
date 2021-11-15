@@ -33,7 +33,10 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart
             <label for="room-features">Room Features</label>
             <?php
             /**
-             * @todo: comment
+             * Wir möchten die Checkboxen pre-selecten, daher holen wir uns eine Liste der mit dem Raum verknüpften
+             * RoomFeatures und holen uns mit der array_map()-Funktion eine Liste nur der IDs dieser Features.
+             * In der foreach-Schleife unten prüfen wir dann mit einem Ternary Operator, ob die Checkbox, die gerade
+             * gerendert wird, in der Liste der bereits verknüpften Features vorkommt und selecten sie, oder eben nicht.
              */
             $featuresOfCurrentRoom = $room->roomFeatures();
             $idsOfFeaturesOfCurrentRoom = array_map(function ($roomFeature) {
@@ -59,7 +62,8 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart
     <div class="row">
         <?php
         /**
-         * @todo: comment
+         * Hier gehen wir alle Bilder aus dem Raum durch und rendern ein Thumbnail und eine Checkbox zum Löschen der
+         * Bilder.
          */
         foreach ($room->getImages() as $image): ?>
         <div class="col col-2">
