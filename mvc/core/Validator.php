@@ -58,7 +58,11 @@ class Validator
         'max' => '%s muss kleiner oder gleich %s sein.',
         'max-string' => '%s darf maximal %s Zeichen haben.',
         'compare' => '%s und %s müssen ident sein.',
-        'unique' => '%s darf nur einmal verwendet werden.'
+        'unique' => '%s darf nur einmal verwendet werden.',
+
+        'file-error' => 'Es konnten nicht alle Dateien aus %s hochgeladen werden.',
+        'file-type' => '%s darf nur Dateien vom Typ "%s" beinhalten.',
+        'file-size' => '%s darf nur Dateien bis zu %d MB beinhalten.'
     ];
 
     /**
@@ -197,6 +201,48 @@ class Validator
         /**
          * Andernfalls geben wir true zurück.
          */
+        return true;
+    }
+
+    /**
+     * @param array       $files
+     * @param string|null $type
+     * @param int|null    $maxFileSize
+     *
+     * @return bool
+     * @todo: comment
+     */
+    public function file(array $files, string $label, ?string $type = null, ?int $maxFileSize = null): bool
+    {
+        if ($files['error'][0] !== UPLOAD_ERR_NO_FILE) {
+            if (empty($maxFileSize)) {
+                $maxFileSize = Config::get('app.max-upload-size', 0);
+            }
+
+            foreach ($files['name'] as $index => $filename) {
+                if ($files['error'][$index] !== UPLOAD_ERR_OK) {
+                    $this->errors[] = sprintf($this->errorMessages['file-error'], $label);
+                    return false;
+                }
+
+                if (!empty($type)) {
+                    $_type = $files['type'][$index];
+                    if (!str_starts_with($_type, $type)) {
+                        $this->errors[] = sprintf($this->errorMessages['file-type'], $label, $type);
+                        return false;
+                    }
+                }
+
+                if (!empty($maxFileSize)) {
+                    $_filesize = $files['size'][$index];
+                    if ($_filesize > $maxFileSize) {
+                        $this->errors[] = sprintf($this->errorMessages['file-size'], $label, $maxFileSize / 1024 / 1024);
+                        return false;
+                    }
+                }
+            }
+        }
+
         return true;
     }
 

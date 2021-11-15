@@ -34,4 +34,14 @@ return [
      * bei denen die gesamte Seite von einem Werbekunden gebrandet wird, hilfreich sein.
      */
     'default-layout' => 'default',
+
+    /**
+     * @todo: comment
+     */
+    'max-upload-size' => 1024 * 1024 * 10,
+
+    /**
+     * @todo: comment (relative to storage folder)
+     */
+    'uploads-folder' =>'/uploads'
 ];

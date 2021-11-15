@@ -17,12 +17,25 @@
         </div>
     </div>
 
-    <div class="form-group mt-1">
-        <label for="location">Location</label>
-        <textarea name="location" id="location" class="form-control" placeholder="Location"></textarea>
-    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group mt-1">
+                <label for="location">Location</label>
+                <textarea name="location" id="location" class="form-control" placeholder="Location"></textarea>
+            </div>
+        </div>
 
-    <!-- @todo: implement room feature dropdown -->
+        <div class="col">
+            <label for="room-features">Room Features</label>
+            <?php
+            foreach ($roomFeatures as $roomFeature): ?>
+                <div class="form-check">
+                    <input type="checkbox" value="<?php echo $roomFeature->id; ?>" name="room-features[]" id="room-features[<?php echo $roomFeature->id; ?>]" class="form-check-input">
+                    <label class="form-check-label" for="room-features[<?php echo $roomFeature->id; ?>]"><?php echo $roomFeature->name; ?></label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>

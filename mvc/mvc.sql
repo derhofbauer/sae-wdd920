@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Erstellungszeit: 08. Nov 2021 um 16:42
--- Server-Version: 10.5.12-MariaDB-1:10.5.12+maria~focal
+-- Erstellungszeit: 15. Nov 2021 um 16:51
+-- Server-Version: 10.5.9-MariaDB-1:10.5.9+maria~focal
 -- PHP-Version: 7.4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -75,6 +75,7 @@ CREATE TABLE `rooms` (
   `name` varchar(255) NOT NULL,
   `location` text DEFAULT NULL,
   `room_nr` varchar(10) NOT NULL,
+  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '[]' CHECK (json_valid(`images`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -84,11 +85,11 @@ CREATE TABLE `rooms` (
 -- Daten für Tabelle `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `name`, `location`, `room_nr`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'VR Lounge', '2. Stock, rechts', 'vr-lounge', '2021-10-25 14:18:49', '2021-10-27 17:50:13', NULL),
-(2, 'Ottakring', '1. Stock, links im Eck', 'HSG-8', '2021-10-25 14:18:49', '2021-11-08 14:13:39', NULL),
-(3, 'Simmering', '1. Stock links', 'HSG-2', '2021-11-08 15:26:54', '2021-11-08 15:27:03', NULL),
-(4, 'Projektraum Schlosspark', '2. Stock, Bibliothek', '14', '2021-11-08 15:28:44', '2021-11-08 16:17:58', NULL);
+INSERT INTO `rooms` (`id`, `name`, `location`, `room_nr`, `images`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'VR Lounge', '2. Stock, rechts', 'vr-lounge', '[\"\\/uploads\\/1636995086_pimp-rollator.jpg\"]', '2021-10-25 14:18:49', '2021-11-15 16:51:26', NULL),
+(2, 'Ottakring', '1. Stock, links im Eck', 'HSG-8', '[]', '2021-10-25 14:18:49', '2021-11-08 14:13:39', NULL),
+(3, 'Simmering', '1. Stock links', 'HSG-2', '[]', '2021-11-08 15:26:54', '2021-11-08 15:27:03', NULL),
+(4, 'Projektraum Schlosspark', '2. Stock, Bibliothek', '14', '[]', '2021-11-08 15:28:44', '2021-11-10 14:21:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -108,8 +109,8 @@ CREATE TABLE `rooms_room_features_mm` (
 
 INSERT INTO `rooms_room_features_mm` (`id`, `room_id`, `room_feature_id`) VALUES
 (1, 2, 1),
-(2, 1, 1),
-(3, 1, 2);
+(4, 3, 1),
+(5, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -131,8 +132,9 @@ CREATE TABLE `room_features` (
 --
 
 INSERT INTO `room_features` (`id`, `name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Beamer', NULL, '2021-10-25 14:19:49', '2021-10-25 14:19:49', NULL),
-(2, 'Flipchart', NULL, '2021-10-25 14:19:49', '2021-10-25 14:19:49', NULL);
+(1, 'Beamer', 'Beamer Desc', '2021-10-25 14:19:49', '2021-11-10 15:24:49', NULL),
+(2, 'Flipchart', 'Flipchart Desc', '2021-10-25 14:19:49', '2021-11-10 15:25:01', NULL),
+(3, 'Audioboxen', '', '2021-11-10 15:22:45', '2021-11-15 14:25:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -260,13 +262,13 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT für Tabelle `rooms_room_features_mm`
 --
 ALTER TABLE `rooms_room_features_mm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT für Tabelle `room_features`
 --
 ALTER TABLE `room_features`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `types`

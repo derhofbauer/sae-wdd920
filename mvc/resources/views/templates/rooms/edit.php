@@ -1,6 +1,6 @@
 <!-- @todo: implement helper function for BASE_URL url generation -->
 <form action="<?php
-echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post">
+echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart/form-data">
 
     <div class="row">
         <div class="col">
@@ -33,18 +33,45 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post">
             <label for="room-features">Room Features</label>
             <?php
             /**
-             * @todo: set pre-checked automatically
+             * @todo: comment
              */
+            $featuresOfCurrentRoom = $room->roomFeatures();
+            $idsOfFeaturesOfCurrentRoom = array_map(function ($roomFeature) {
+                return $roomFeature->id;
+            }, $featuresOfCurrentRoom);
+
             foreach ($roomFeatures as $roomFeature): ?>
                 <div class="form-check">
-                    <input type="checkbox" value="<?php echo $roomFeature->id; ?>" name="room-features[]" id="room-features[<?php echo $roomFeature->id; ?>]" class="form-check-input">
+                    <input type="checkbox" value="<?php echo $roomFeature->id; ?>" name="room-features[]" id="room-features[<?php echo $roomFeature->id; ?>]" class="form-check-input"<?php echo (in_array($roomFeature->id, $idsOfFeaturesOfCurrentRoom)) ? ' checked' : '' ?>>
                     <label class="form-check-label" for="room-features[<?php echo $roomFeature->id; ?>]"><?php echo $roomFeature->name; ?></label>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 
-    <!-- @todo: implement room feature dropdown -->
+    <div class="row">
+        <div class="col">
+            <label for="images">Images</label>
+            <input type="file" class="form-control" id="images" name="images[]" multiple>
+        </div>
+    </div>
+
+    <div class="row">
+        <?php
+        /**
+         * @todo: comment
+         */
+        foreach ($room->getImages() as $image): ?>
+        <div class="col col-2">
+            <img src="<?php echo BASE_URL . $image; ?>" alt="<?php echo $room->name; ?>" class="thumbnail">
+
+            <div class="form-check">
+                <input type="checkbox" value="<?php echo $image; ?>" name="delete-images[]" id="delete-images[<?php echo $image; ?>]" class="form-check-input">
+                <label class="form-check-label" for="delete-images[<?php echo $image; ?>]">Löschen?</label>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>

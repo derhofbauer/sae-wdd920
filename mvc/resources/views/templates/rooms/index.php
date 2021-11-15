@@ -12,6 +12,7 @@
     <thead>
     <th>#</th>
     <th>RNr.</th>
+    <th>Thumbnail</th>
     <th>Name</th>
     <th>Location</th>
     <?php
@@ -31,6 +32,14 @@
                 echo $room->id; ?></td>
             <td><?php
                 echo $room->room_nr; ?></td>
+            <td>
+                <?php
+                if ($room->hasImages()): ?>
+                    <img src="<?php
+                    echo BASE_URL . $room->getImages()[0]; ?>" class="thumbnail--table">
+                <?php
+                endif; ?>
+            </td>
             <td><?php
                 echo $room->name; ?></td>
             <td><?php

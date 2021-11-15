@@ -37,6 +37,7 @@ class Room extends AbstractModel
         public string $name = '',
         public ?string $location = null,
         public string $room_nr = '',
+        public string $images = '[]',
         public string $created_at = '',
         public string $updated_at = '',
         public ?string $deleted_at = null,
@@ -73,12 +74,16 @@ class Room extends AbstractModel
              * Query ausführen und Ergebnis direkt zurückgeben. Das kann entweder true oder false sein, je nachdem ob
              * der Query funktioniert hat oder nicht.
              */
-            $result = $database->query("UPDATE $tablename SET name = ?, location = ?, room_nr = ? WHERE id = ?", [
-                's:name' => $this->name,
-                's:location' => $this->location,
-                's:room_nr' => $this->room_nr,
-                'i:id' => $this->id
-            ]);
+            $result = $database->query(
+                "UPDATE $tablename SET name = ?, location = ?, room_nr = ?, images = ? WHERE id = ?",
+                [
+                    's:name' => $this->name,
+                    's:location' => $this->location,
+                    's:room_nr' => $this->room_nr,
+                    's:images' => $this->images,
+                    'i:id' => $this->id
+                ]
+            );
 
             /**
              * Raum Feature Daten aus $this->_roomFeatures speichern.
@@ -90,10 +95,11 @@ class Room extends AbstractModel
             /**
              * Hat das Objekt keine id, so müssen wir es neu anlegen.
              */
-            $result = $database->query("INSERT INTO $tablename SET name = ?, location = ?, room_nr = ?", [
+            $result = $database->query("INSERT INTO $tablename SET name = ?, location = ?, room_nr = ?, images = ?", [
                 's:name' => $this->name,
                 's:location' => $this->location,
-                's:room_nr' => $this->room_nr
+                's:room_nr' => $this->room_nr,
+                's:images' => $this->images
             ]);
 
             /**
@@ -260,5 +266,71 @@ class Room extends AbstractModel
          * Datenbankergebnis verarbeiten und zurückgeben.
          */
         return $result;
+    }
+
+    /**
+     * @return array
+     * @todo: comment
+     */
+    public function getImages(): array
+    {
+        return json_decode($this->images);
+    }
+
+    /**
+     * @return bool
+     * @todo: comment
+     */
+    public function hasImages(): bool
+    {
+        return !empty($this->getImages());
+    }
+
+    /**
+     * @param array $images
+     *
+     * @return array
+     * @todo: comment
+     */
+    public function addImages(array $images): array
+    {
+        $currentImages = $this->getImages();
+        $currentImages = array_merge($currentImages, $images);
+        $this->setImages($currentImages);
+
+        return $currentImages;
+    }
+
+    /**
+     * @param array $images
+     *
+     * @return array
+     * @todo: comment
+     */
+    public function removeImages(array $images): array
+    {
+        $currentImages = $this->getImages();
+        $filteredImages = array_filter($currentImages, function ($image) use ($images) {
+            if (in_array($image, $images)) {
+                return false;
+            }
+            return true;
+        });
+        $this->setImages($filteredImages);
+
+        return $filteredImages;
+    }
+
+    /**
+     * @param array $images
+     *
+     * @return array
+     * @todo: comment
+     */
+    public function setImages(array $images): array
+    {
+        $this->images = json_encode(array_values($images));
+
+        return $this->getImages();
     }
 }

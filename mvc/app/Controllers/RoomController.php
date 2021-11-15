@@ -6,6 +6,7 @@ use App\Models\Room;
 use App\Models\RoomFeature;
 use Core\Helpers\Redirector;
 use Core\Middlewares\AuthMiddleware;
+use Core\Models\AbstractFile;
 use Core\Session;
 use Core\Validator;
 use Core\View;
@@ -128,6 +129,15 @@ class RoomController
         $room->fill($_POST);
 
         /**
+         * Hochgeladene Dateien verarbeiten
+         */
+        $room = $this->handleUploadedFiles($room);
+        /**
+         * @todo: comment
+         */
+        $room = $this->handleDeleteFiles($room);
+
+        /**
          * RoomFeature Selections speichern.
          *
          * Wurden Raum Features im Formular ausgewählt, so holen wir hier die gewählten IDs und überschreiben die
@@ -148,13 +158,12 @@ class RoomController
              * ... so speichern wir einen Fehler in die Session und leiten wieder zurück zum Bearbeitungsformular.
              */
             Session::set('errors', ['Speichern fehlgeschlagen.']);
-            Redirector::redirect("/rooms/${id}");
         }
 
         /**
          * Wenn alles funktioniert hat, leiten wir zurück zur /home-Route.
          */
-        Redirector::redirect('/home');
+        Redirector::redirect("/rooms/${id}");
     }
 
     /**
@@ -172,9 +181,16 @@ class RoomController
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * View laden.
+         * Alle Room Features aus der Datenbank laden, damit wir im View Checkboxen generieren können.
          */
-        View::render('rooms/create');
+        $roomFeatures = RoomFeature::all();
+
+        /**
+         * View laden und Daten übergeben.
+         */
+        View::render('rooms/create', [
+            'roomFeatures' => $roomFeatures
+        ]);
     }
 
     /**
@@ -347,6 +363,7 @@ class RoomController
                 column: 'room_nr',
                 ignoreThisId: $id
             );
+            $validator->file($_FILES['images'], label: 'Images', type: 'image');
             /**
              * @todo: implement Validate Array + Contents
              */
@@ -356,6 +373,43 @@ class RoomController
          * Fehler aus dem Validator zurückgeben.
          */
         return $validator->getErrors();
+    }
+
+    /**
+     * @param object|null $room
+     *
+     * @throws \Exception
+     * @todo: comment
+     */
+    public function handleUploadedFiles(Room $room): ?Room
+    {
+        $files = AbstractFile::createFromUploadedFiles('images');
+
+        foreach ($files as $file) {
+            $storagePath = $file->putToUploadsFolder();
+            $room->addImages([$storagePath]);
+        }
+        return $room;
+    }
+
+
+    /**
+     * @param Room|null $room
+     *
+     * @return Room
+     * @todo: comment
+     */
+    private function handleDeleteFiles(?Room $room): Room
+    {
+        if (isset($_POST['delete-images'])) {
+            foreach ($_POST['delete-images'] as $deleteImage) {
+                $room->removeImages([$deleteImage]);
+
+                AbstractFile::delete($deleteImage);
+            }
+        }
+
+        return $room;
     }
 
 }
