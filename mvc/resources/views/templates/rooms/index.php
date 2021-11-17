@@ -15,11 +15,7 @@
     <th>Thumbnail</th>
     <th>Name</th>
     <th>Location</th>
-    <?php
-    if (\Core\Middlewares\AuthMiddleware::isAdmin()): ?>
-        <th>Actions</th>
-    <?php
-    endif; ?>
+    <th>Actions</th>
     </thead>
     <?php
     /**
@@ -44,17 +40,24 @@
                 echo $room->name; ?></td>
             <td><?php
                 echo $room->location; ?></td>
-            <?php
-            if (\Core\Middlewares\AuthMiddleware::isAdmin()): ?>
-                <td>
+            <td>
+                <?php
+                if (\Core\Middlewares\AuthMiddleware::isAdmin()): ?>
                     <a href="<?php
                     echo BASE_URL . "/rooms/$room->id"; ?>" class="btn btn-primary">Edit</a>
 
                     <a href="<?php
                     echo BASE_URL . "/rooms/$room->id/delete"; ?>" class="btn btn-danger">Delete</a>
-                </td>
-            <?php
-            endif; ?>
+                <?php
+                endif; ?>
+
+                <?php
+                if (\Core\Middlewares\AuthMiddleware::isLoggedIn()): ?>
+                    <a href="<?php
+                    echo BASE_URL . "/rooms/$room->id/booking/time"; ?>" class="btn btn-success">Book</a>
+                <?php
+                endif; ?>
+            </td>
         </tr>
 
     <?php

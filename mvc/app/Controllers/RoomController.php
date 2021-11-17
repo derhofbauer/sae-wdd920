@@ -6,7 +6,7 @@ use App\Models\Room;
 use App\Models\RoomFeature;
 use Core\Helpers\Redirector;
 use Core\Middlewares\AuthMiddleware;
-use Core\Models\AbstractFile;
+use Core\Models\File;
 use Core\Session;
 use Core\Validator;
 use Core\View;
@@ -388,7 +388,7 @@ class RoomController
          * Wir erstellen zunächst einen Array an Objekten, damit wir Logik, die zu einer Datei gehört, in diesen
          * Objekten kapseln können.
          */
-        $files = AbstractFile::createFromUploadedFiles('images');
+        $files = File::createFromUploadedFiles('images');
 
         /**
          * Nun gehen wir alle Dateien durch ...
@@ -434,7 +434,7 @@ class RoomController
                 /**
                  * ... und löschen die Datei aus dem Uploads-Ordner.
                  */
-                AbstractFile::delete($deleteImage);
+                File::delete($deleteImage);
             }
         }
 

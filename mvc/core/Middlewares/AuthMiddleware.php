@@ -3,6 +3,7 @@
 namespace Core\Middlewares;
 
 use App\Models\User;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class AuthMiddleware
@@ -47,6 +48,10 @@ class AuthMiddleware
         }
     }
 
+    /**
+     * @throws \Exception
+     * @todo: comment
+     */
     public static function isLoggedInOrFail()
     {
         /**
@@ -61,6 +66,14 @@ class AuthMiddleware
         if ($isLoggedIn !== true) {
             throw new \Exception('Unauthorized', 401);
         }
+    }
+
+    /**
+     * @return bool
+     * @todo: comment
+     */
+    #[Pure] public static function isLoggedIn () {
+        return User::isLoggedIn();
     }
 
 }

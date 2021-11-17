@@ -44,5 +44,11 @@ return [
     /**
      * Wo sollen hochgeladene Dateien hingespeichert werden? Der Pfad ist relativ zum 'storage' Ordner.
      */
-    'uploads-folder' =>'/uploads'
+    'uploads-folder' =>'/uploads',
+
+    /**
+     * @todo: comment
+     */
+    'booking-start' => 8,
+    'booking-end' => 23
 ];

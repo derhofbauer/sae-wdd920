@@ -12,7 +12,7 @@ use Core\Config;
  *
  * @package Core\Models
  */
-class AbstractFile
+abstract class AbstractFile
 {
 
     public function __construct(
@@ -24,11 +24,21 @@ class AbstractFile
     ) {
     }
 
+    /**
+     * @return bool
+     * @todo: comment
+     */
     public function hasUploadError(): bool
     {
         return $this->error !== UPLOAD_ERR_OK;
     }
 
+    /**
+     * @param string $keyInSuperglobal
+     *
+     * @return bool
+     * @todo: comment
+     */
     public static function filesHaveBeenUploaded(string $keyInSuperglobal): bool
     {
         return ($_FILES[$keyInSuperglobal]['error'][0] !== UPLOAD_ERR_NO_FILE);
@@ -62,7 +72,7 @@ class AbstractFile
              * füllen.
              */
             foreach ($files['name'] as $key => $name) {
-                $file = new AbstractFile(
+                $file = new File(
                     $name,
                     $files['type'][$key],
                     $files['tmp_name'][$key],
@@ -117,7 +127,7 @@ class AbstractFile
      *
      * @return string
      */
-    private function getDestinationPath(): string
+    public function getDestinationPath(): string
     {
         /**
          * Uploads Ordner aus Config holen.
@@ -127,8 +137,8 @@ class AbstractFile
         /**
          * Storage Pfad holen und Ziel Pfad berechnen.
          */
-        $storageFolder = self::getStoragePath();
-        $destinationPath = realpath("{$storageFolder}/{$uploadsFolder}/");
+        $storageFolderAbsolutePath = self::getAbsoluteStoragePath();
+        $destinationPath = realpath("{$storageFolderAbsolutePath}/{$uploadsFolder}/");
         $destinationName = time() . "_{$this->name}";
 
         /**
@@ -175,7 +185,7 @@ class AbstractFile
      *
      * @return string
      */
-    public static function getStoragePath(): string
+    public static function getAbsoluteStoragePath(): string
     {
         /**
          * Wir definieren unseren Pfad ausgehend von dem Ordner, in dem diese Datei liegt, "relative".
@@ -215,6 +225,5 @@ class AbstractFile
          */
         return -1;
     }
-
 
 }
