@@ -49,8 +49,9 @@ class AuthMiddleware
     }
 
     /**
+     * Prüfen, ob eine Person eingeloggt ist.
+     *
      * @throws \Exception
-     * @todo: comment
      */
     public static function isLoggedInOrFail()
     {
@@ -69,8 +70,9 @@ class AuthMiddleware
     }
 
     /**
+     * Alias für User::isLoggedIn()
+     *
      * @return bool
-     * @todo: comment
      */
     #[Pure] public static function isLoggedIn () {
         return User::isLoggedIn();

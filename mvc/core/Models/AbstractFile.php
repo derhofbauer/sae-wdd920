@@ -25,8 +25,9 @@ abstract class AbstractFile
     }
 
     /**
+     * Prüfen ob Fehler während des Uploads aufgetreten sind oder nicht.
+     *
      * @return bool
-     * @todo: comment
      */
     public function hasUploadError(): bool
     {
@@ -34,10 +35,11 @@ abstract class AbstractFile
     }
 
     /**
+     * Prüfen, ob Dateien hochgeladen wurden unter einem bestimmten input Namen.
+     *
      * @param string $keyInSuperglobal
      *
      * @return bool
-     * @todo: comment
      */
     public static function filesHaveBeenUploaded(string $keyInSuperglobal): bool
     {

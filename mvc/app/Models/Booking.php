@@ -103,12 +103,13 @@ class Booking extends AbstractModel
     }
 
     /**
+     * Booking anhand eines Raumes und Start- und Endzeit suchen.
+     *
      * @param int      $roomId
      * @param DateTime $startDate
      * @param DateTime $endDate
      *
      * @return array
-     * @todo: comment
      */
     public static function findByRoomAndDate(int $roomId, DateTime $startDate, DateTime $endDate): array
     {
@@ -140,15 +141,19 @@ class Booking extends AbstractModel
     }
 
     /**
+     * Prüfen, ob es bereits Bookings für einen Raum in einem bestimmten Timeslot gibt.
+     *
      * @param int      $roomId
      * @param DateTime $startDate
      * @param DateTime $endDate
      *
      * @return bool
-     * @todo: comment
      */
     public static function existsForRoomAndTime(int $roomId, DateTime $startDate, DateTime $endDate): bool
     {
+        /**
+         * Wir verwenden die findByRoomAndDate()-Methode und prüfen, ob das Ergebnis leer ist oder nicht.
+         */
         return !empty(self::findByRoomAndDate($roomId, $startDate, $endDate));
     }
 }

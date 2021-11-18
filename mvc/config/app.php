@@ -44,11 +44,11 @@ return [
     /**
      * Wo sollen hochgeladene Dateien hingespeichert werden? Der Pfad ist relativ zum 'storage' Ordner.
      */
-    'uploads-folder' =>'/uploads',
+    'uploads-folder' => '/uploads',
 
     /**
-     * @todo: comment
+     * Festlegen, in welchen Zeiten Räume gebucht werden können.
      */
-    'booking-start' => 8,
-    'booking-end' => 23
+    'booking-start' => 8, // 08:00
+    'booking-end' => 23, // 23:00
 ];
