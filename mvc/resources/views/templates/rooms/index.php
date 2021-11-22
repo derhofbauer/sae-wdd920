@@ -36,8 +36,11 @@
                 <?php
                 endif; ?>
             </td>
-            <td><?php
-                echo $room->name; ?></td>
+            <td>
+                <a href="<?php echo BASE_URL; ?>/rooms/<?php echo $room->id; ?>/show"><?php
+                    echo $room->name; ?>
+                </a>
+            </td>
             <td><?php
                 echo $room->location; ?></td>
             <td>

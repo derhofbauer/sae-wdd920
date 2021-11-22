@@ -35,6 +35,18 @@ class RoomController
         ]);
     }
 
+    /**
+     * @param int $id
+     * @todo: comment
+     */
+    public function show(int $id) {
+        $room = Room::findOrFail($id);
+
+        View::render('rooms/show', [
+            'room' => $room
+        ]);
+    }
+
 
     /**
      * Bearbeitungsformular anzeigen

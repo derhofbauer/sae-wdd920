@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
 use Core\Helpers\Redirector;
 use Core\Session;
+use Core\Validator;
 use Core\View;
-use App\Models\User;
 
 /**
  * Class AuthController
@@ -100,6 +101,79 @@ class AuthController
     public function logout()
     {
         User::logout('/');
+    }
+
+    /**
+     * @todo: comment
+     */
+    public function signupForm()
+    {
+        /**
+         * Wenn bereits ein*e User*in eingeloggt ist, zeigen wir das Login Formular nicht an, sondern leiten auf die
+         * Startseite weiter.
+         */
+        if (User::isLoggedIn()) {
+            Redirector::redirect('/home');
+        }
+
+        /**
+         * Andernfalls laden wir das Registrierungs-Formular.
+         */
+        View::render('auth/signup');
+    }
+
+    /**
+     * @todo: comment
+     */
+    public function signupDo()
+    {
+        /**
+         * 1. Validierung
+         *   + Email schon vergeben?
+         *   + Username schon vergeben?
+         *   + Passwort erfüllt die Anforderungen?
+         *   + Beide Passwort Felder müssen ident sein
+         *   + Email ist wirklich eine Email-Adresse?
+         * 2. Wenn Fehler: Fehlermeldung; Wenn OK: weiter
+         * 3. Neues User Objekt anlegen
+         * 4. Formulardaten in User Objekt speichern
+         * 5. User Objekt in DB speichern
+         * 5a. Instant Login
+         * 6. Redirect
+         */
+
+        $validator = new Validator();
+        $validator->email($_POST['email'], 'E-Mail', required: true);
+        $validator->unique($_POST['email'], 'E-Mail', 'users', 'email');
+        $validator->unique($_POST['username'], 'Username', 'users', 'username');
+        $validator->password($_POST['password'], 'Passwort', min: 8, required: true);
+        $validator->compare([
+            $_POST['password'],
+            'Passwort'
+        ], [
+            $_POST['password_repeat'],
+            'Passwort wiederholen'
+        ]);
+
+        $errors = $validator->getErrors();
+
+        if (!empty($errors)) {
+            Session::set('errors', $errors);
+            Redirector::redirect('/sign-up');
+        }
+
+        $user = new User();
+        $user->fill($_POST);
+        $user->setPassword($_POST['password']);
+
+        if ($user->save()) {
+            Session::set('success', ['Herzlich wilkommen!']);
+            $user->login('/home');
+        } else {
+            $errors[] = 'Leider ist ein Fehler aufgetreten. Bitte probieren Sie es erneut! :(';
+            Session::set('errors', $errors);
+            Redirector::redirect('/sign-up');
+        }
     }
 
 }

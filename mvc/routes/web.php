@@ -32,6 +32,8 @@ return [
     '/login' => [AuthController::class, 'loginForm'],
     '/login/do' => [AuthController::class, 'loginDo'],
     '/logout' => [AuthController::class, 'logout'],
+    '/sign-up' => [AuthController::class, 'signupForm'],
+    '/sign-up/do' => [AuthController::class, 'signupDo'],
 
     /**
      * Home Route
@@ -42,6 +44,7 @@ return [
      * Rooms Routes
      */
     '/rooms' => [RoomController::class, 'index'],
+    '/rooms/{id}/show' => [RoomController::class, 'show'],
     '/rooms/{id}' => [RoomController::class, 'edit'],
     '/rooms/{id}/update' => [RoomController::class, 'update'],
     '/rooms/{id}/delete' => [RoomController::class, 'delete'],

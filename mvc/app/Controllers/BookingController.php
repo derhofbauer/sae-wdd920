@@ -20,11 +20,11 @@ class BookingController
     /**
      * Formular zur Buchung von Time-Slots zu einem Raum anzeigen.
      *
-     * @param int $roomId
+     * @param int $id
      *
      * @throws \Exception
      */
-    public function selectSlots(int $roomId)
+    public function selectSlots(int $id)
     {
         /**
          * Prüfen, ob ein*e User*in eingeloggt ist. Wenn nicht, geben wir einen Fehler 403 Forbidden zurück. Dazu haben
@@ -36,7 +36,7 @@ class BookingController
         /**
          * Raum laden
          */
-        $room = Room::find($roomId);
+        $room = Room::find($id);
 
         /**
          * Formular anzeigen, damit Zeitslots gebucht werden können.

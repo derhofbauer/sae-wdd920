@@ -11,6 +11,6 @@
             <input type="password" name="password" id="password" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
-
+        <a href="<?php echo BASE_URL; ?>/sign-up" class="btn btn-link">Registrieren</a>
     </form>
 </div>

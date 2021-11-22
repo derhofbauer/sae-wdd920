@@ -20,7 +20,9 @@ class Validator
         'text' => '/^[a-zA-Z .,#\-_|;:?!]*$/',
         'textnum' => '/^[\w\s .,#\-_|;:?!]*$/',
         'alphanumeric' => '/^[^-_]{1}[a-zA-Z0-9-_]*$/',
-        'checkbox' => '/^(on|true|checked|1)$/i'
+        'checkbox' => '/^(on|true|checked|1)$/i',
+        'password' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',
+        'email' => '/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix' // taken from: https://www.w3schools.in/php-script/email-validation-php-regular-expression/
     ];
 
     /**
@@ -47,18 +49,23 @@ class Validator
         'text' => '%s darf nur Buchstaben und Sonderzeichen beinhalten.',
         'textnum' => '%s darf nur aus alphanumerischen Zeichen bestehen.',
         'alphanumeric' => '%s darf nur Buchstaben, Zahlen, Binde- und Unterstriche beinhalten.',
+        'checkbox' => '%s enthält keinen gültigen Wert für eine Checkbox.',
+        'password' => '%s muss mindestens 8 Zeichen lang sein, Groß- und Kleinbuchstabe und Sonderzeichen enthalten.',
+        'email' => '%s muss eine korrekte E-Mail Adresse sein.',
+
         'numeric' => '%s muss numerisch sein.',
         'int' => '%s muss ganzzahlig sein.',
         'float' => '%s muss eine Fließkommazahl sein.',
+
         'equals' => '%s muss ident sein mit %s.',
+        'compare' => '%s und %s müssen ident sein.',
+        'unique' => '%s wird bereits verwendet.',
 
         'required' => '%s ist ein Pflichtfeld.',
         'min' => '%s muss mindestens %s sein.',
         'min-string' => '%s muss mindestens %s Zeichen haben.',
         'max' => '%s muss kleiner oder gleich %s sein.',
         'max-string' => '%s darf maximal %s Zeichen haben.',
-        'compare' => '%s und %s müssen ident sein.',
-        'unique' => '%s darf nur einmal verwendet werden.',
 
         'file-error' => 'Es konnten nicht alle Dateien aus %s hochgeladen werden.',
         'file-type' => '%s darf nur Dateien vom Typ "%s" beinhalten.',
