@@ -13,9 +13,6 @@ echo BASE_URL . "/room-features/{$roomFeature->id}/update" ?>" method="post">
         <textarea maxlength="255" required class="form-control" placeholder="Description" name="description" id="description"><?php echo $roomFeature->description; ?></textarea>
     </div>
 
-
-    <!-- @todo: implement equipment dropdown -->
-
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>
         <a href="<?php

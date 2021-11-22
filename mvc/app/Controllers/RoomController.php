@@ -36,12 +36,22 @@ class RoomController
     }
 
     /**
+     * Einzelnen Raum anzeigen.
+     *
      * @param int $id
-     * @todo: comment
+     *
+     * @throws \Exception
      */
-    public function show(int $id) {
+    public function show(int $id)
+    {
+        /**
+         * Gewünschten Raum aus der DB laden.
+         */
         $room = Room::findOrFail($id);
 
+        /**
+         * View laden und Daten übergeben.
+         */
         View::render('rooms/show', [
             'room' => $room
         ]);

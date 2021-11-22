@@ -11,8 +11,6 @@
             /**
              * Hier holen wir die Start- und Endzeiten aus der Config, damit wir wissen, welche Checkboxen wir
              * generieren müssen.
-             *
-             * @todo: disable unavailable slots
              */
             $bookingStart = \Core\Config::get('app.booking-start', 8);
             $bookingEnd = \Core\Config::get('app.booking-end', 16);

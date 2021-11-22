@@ -49,15 +49,11 @@
 <div class="row">
     <?php
     /**
-     * Hier gehen wir alle Bilder aus dem Raum durch und rendern ein Thumbnail und eine Checkbox zum Löschen der
-     * Bilder.
-     * @todo: comment
+     * Hier gehen wir alle Bilder aus dem Raum durch und rendern ein Thumbnail.
      */
     foreach ($room->getImages() as $image): ?>
         <div class="col col-2">
-            <img src="<?php
-            echo BASE_URL . $image; ?>" alt="<?php
-            echo $room->name; ?>" class="thumbnail">
+            <img src="<?php echo BASE_URL . $image; ?>" alt="<?php echo $room->name; ?>" class="thumbnail">
         </div>
     <?php
     endforeach; ?>
