@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Erstellungszeit: 15. Nov 2021 um 16:51
+-- Erstellungszeit: 24. Nov 2021 um 16:38
 -- Server-Version: 10.5.9-MariaDB-1:10.5.9+maria~focal
--- PHP-Version: 7.4.20
+-- PHP-Version: 7.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,14 +30,27 @@ SET time_zone = "+00:00";
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `time_from` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  `time_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `time_from` timestamp NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  `time_to` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `foreign_table` varchar(255) NOT NULL,
   `foreign_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `user_id`, `time_from`, `time_to`, `foreign_table`, `foreign_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, NULL, NULL, 'App\\Models\\Equipment', 1, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
+(2, 1, NULL, NULL, 'App\\Models\\Equipment', 1, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
+(3, 1, NULL, NULL, 'App\\Models\\Equipment', 1, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
+(4, 1, NULL, NULL, 'App\\Models\\Equipment', 3, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
+(5, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
+(6, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:23:47', '2021-11-24 16:23:47', NULL),
+(7, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:28:29', '2021-11-24 16:28:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -50,7 +63,7 @@ CREATE TABLE `equipments` (
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `units` int(11) NOT NULL DEFAULT 1,
-  `type_id` int(11) NOT NULL,
+  `type_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -61,8 +74,11 @@ CREATE TABLE `equipments` (
 --
 
 INSERT INTO `equipments` (`id`, `name`, `description`, `units`, `type_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Shure SM58', NULL, 10, 1, '2021-10-25 14:21:40', '2021-10-25 14:21:40', NULL),
-(2, 'XLR Kabel 10m', NULL, 20, 2, '2021-10-25 14:21:40', '2021-10-25 14:21:40', NULL);
+(1, 'Shure SM58', 'Shure SM58 Desc.', 7, 1, '2021-10-25 14:21:40', '2021-11-24 16:20:17', NULL),
+(2, 'XLR Kabel 10m', 'XLR Kabel 10m Desc.', 20, 2, '2021-10-25 14:21:40', '2021-11-24 14:30:28', NULL),
+(3, 'Kamera', 'Irgendeine Kamera', 46, NULL, '2021-11-24 14:57:20', '2021-11-24 16:20:17', NULL),
+(4, 'Noch ein Mikro', 'Was weiß denn ich', 70, NULL, '2021-11-24 14:57:30', '2021-11-24 16:28:29', NULL),
+(5, 'Bert Fry', 'Cillum laudantium u', 90, NULL, '2021-11-24 14:57:43', '2021-11-24 15:10:13', '2021-11-24 15:10:13');
 
 -- --------------------------------------------------------
 
@@ -244,13 +260,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für Tabelle `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT für Tabelle `equipments`
 --
 ALTER TABLE `equipments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT für Tabelle `rooms`
