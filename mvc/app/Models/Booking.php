@@ -21,8 +21,8 @@ class Booking extends AbstractModel
          */
         public ?int $id = null,
         public ?int $user_id = null,
-        public string $time_from = '',
-        public string $time_to = '',
+        public ?string $time_from = null,
+        public ?string $time_to = null,
         public string $foreign_table = '',
         public ?int $foreign_id = null,
         public string $created_at = '',

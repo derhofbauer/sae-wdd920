@@ -6,10 +6,13 @@
  */
 
 use App\Controllers\AuthController;
+use App\Controllers\BookingController;
+use App\Controllers\EquipmentController;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
 use App\Controllers\RoomFeatureController;
-use App\Controllers\BookingController;
+use App\Controllers\CartController;
+use App\Controllers\CheckoutController;
 
 /**
  * Die Dateien im /routes Ordner beinhalten ein Mapping von einer URL auf eine eindeutige Controller & Action
@@ -62,6 +65,32 @@ return [
     '/room-features/{id}/delete/confirm' => [RoomFeatureController::class, 'deleteConfirm'],
     '/room-features/create' => [RoomFeatureController::class, 'create'],
     '/room-features/store' => [RoomFeatureController::class, 'store'],
+
+    /**
+     * Equipments Routes
+     */
+    '/equipments' => [EquipmentController::class, 'index'],
+    '/equipments/{id}/show' => [EquipmentController::class, 'show'],
+    '/equipments/{id}' => [EquipmentController::class, 'edit'],
+    '/equipments/{id}/update' => [EquipmentController::class, 'update'],
+    '/equipments/{id}/delete' => [EquipmentController::class, 'delete'],
+    '/equipments/{id}/delete/confirm' => [EquipmentController::class, 'deleteConfirm'],
+    '/equipments/create' => [EquipmentController::class, 'create'],
+    '/equipments/store' => [EquipmentController::class, 'store'],
+
+    /**
+     * Cart Routes
+     */
+    '/cart' => [CartController::class, 'index'],
+    '/equipments/{id}/add-to-cart' => [CartController::class, 'add'],
+    '/equipments/{id}/remove-from-cart' => [CartController::class, 'remove'],
+    '/equipments/{id}/remove-all-from-cart' => [CartController::class, 'removeAll'],
+
+    /**
+     * Checkout Routes
+     */
+    '/checkout/summary' => [CheckoutController::class, 'summary'],
+    '/checkout/finish' => [CheckoutController::class, 'finish'],
 
     /**
      * Booking Routes

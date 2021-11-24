@@ -13,7 +13,6 @@ use Core\Traits\SoftDelete;
  */
 class Room extends AbstractModel
 {
-
     const TABLENAME_ROOMFEATURES_MM = 'rooms_room_features_mm';
 
     /**

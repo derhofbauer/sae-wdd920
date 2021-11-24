@@ -16,9 +16,9 @@ class Validator
      * @var string[]
      */
     private array $types = [
-        'letters' => '/^[a-zA-Z ]*$/',
-        'text' => '/^[a-zA-Z .,#\-_|;:?!]*$/',
-        'textnum' => '/^[\w\s .,#\-_|;:?!]*$/',
+        'letters' => '/^[a-zA-Zßäöü ]*$/i',
+        'text' => '/^[a-zA-Zßäöü .,#\-_|;:?!]*$/i',
+        'textnum' => '/^[\w\sßäöü .,#\-_|;:?!]*$/i',
         'alphanumeric' => '/^[^-_]{1}[a-zA-Z0-9-_]*$/',
         'checkbox' => '/^(on|true|checked|1)$/i',
         'password' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',

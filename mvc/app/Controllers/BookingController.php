@@ -63,7 +63,7 @@ class BookingController
         AuthMiddleware::isLoggedInOrFail();
 
         /**
-         * @todo: Hier müsste eigentlich validiert werden!
+         * @todo: Hier müsste eigentlich validiert werden! Wir verzichten der Einfachheit halber vorerst darauf.
          */
 
         /**
@@ -129,7 +129,7 @@ class BookingController
                     $booking = new Booking();
                     $booking->fill([
                         'user_id' => User::getLoggedIn()->id,
-                        'foreign_table' => 'rooms',
+                        'foreign_table' => Room::class,
                         'foreign_id' => $roomId,
                         'time_from' => $startAndEndDate['start'],
                         'time_to' => $startAndEndDate['end']
