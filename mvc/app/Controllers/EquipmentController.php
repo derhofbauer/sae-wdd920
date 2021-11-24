@@ -10,14 +10,24 @@ use Core\Validator;
 use Core\View;
 
 /**
- * @todo: comment
+ * Equipment Controller
  */
 class  EquipmentController
 {
 
-    public function index () {
+    /**
+     * Alle Einträge listen.
+     */
+    public function index()
+    {
+        /**
+         * Alle Objekte über das Model aus der Datenbank laden.
+         */
         $equipments = Equipment::all();
 
+        /**
+         * View laden und Daten übergeben.
+         */
         View::render('equipments/index', [
             'equipments' => $equipments
         ]);
@@ -120,7 +130,7 @@ class  EquipmentController
         }
 
         /**
-         * Gewünschten Room über das ROom-Model aus der Datenbank laden. Hier verwenden wir die findOrFail()-Methode aus
+         * Gewünschtes Equipment über das Model aus der Datenbank laden. Hier verwenden wir die findOrFail()-Methode aus
          * dem AbstractModel, die einen 404 Fehler ausgibt, wenn das Objekt nicht gefunden wird. Dadurch sparen wir uns
          * hier zu prüfen, ob ein Post gefunden wurde oder nicht.
          */
@@ -211,7 +221,7 @@ class  EquipmentController
         }
 
         /**
-         * Neuen Room erstellen und mit den Daten aus dem Formular befüllen.
+         * Neues Equipment erstellen und mit den Daten aus dem Formular befüllen.
          */
         $equipment = new Equipment();
         $equipment->fill($_POST);
@@ -250,7 +260,7 @@ class  EquipmentController
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * Raum, der gelöscht werden soll, aus der DB laden.
+         * Equipment, das gelöscht werden soll, aus der DB laden.
          */
         $equipment = Equipment::findOrFail($id);
 

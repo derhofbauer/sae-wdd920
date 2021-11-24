@@ -7,13 +7,27 @@ use Core\Models\AbstractModel;
 use Core\Traits\SoftDelete;
 
 /**
- * @todo: comment
+ * Equipment
  */
 class Equipment extends AbstractModel
 {
+    /**
+     * Wird innerhalb einer Klasse das use-Keyword verwendet, so wird damit ein Trait importiert. Das kann man sich
+     * vorstellen wie einen Import mittels require, weil die Methoden, die im Trait definiert sind, einfach in die
+     * Klasse, die den Trait verwendet, eingefügt werden, als ob sie in der Klasse selbst definiert worden wären.
+     * Das hat den Vorteil, dass Methoden, die in mehreren Klassen vorkommen, zentral definiert und verwaltet werden
+     * können in einem Trait, und dennoch überall dort eingebunden werden, wo sie gebraucht werden, ohne Probleme mit
+     * komplexen und sehr verschachtelten Vererbungen zu kommen.
+     */
     use SoftDelete;
 
     public function __construct(
+        /**
+         * Wir verwenden hier Constructor Property Promotion, damit wir die ganzen Klassen Eigenschaften nicht 3 mal
+         * angeben müssen.
+         *
+         * Im Prinzip definieren wir alle Spalten aus der Tabelle mit dem richtigen Datentyp.
+         */
         public ?int $id = null,
         public string $name = '',
         public ?string $description = null,
@@ -94,6 +108,9 @@ class Equipment extends AbstractModel
     /**
      * @return null
      * @todo: Implement type relation & form dropdowns for types!
+     *
+     * Hier legen wir eine Methode an, damit wir später, sofern wir noch genug Zeit haben, die Relation zu den Types
+     * herstellen können, ohne die Views anpassen zu müssen.
      */
     public function type() {
         return null;
