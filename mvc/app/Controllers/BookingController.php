@@ -49,11 +49,11 @@ class BookingController
     /**
      * Timeslots wirklich buchen.
      *
-     * @param int $roomId
+     * @param int $id
      *
      * @throws \Exception
      */
-    public function bookSlots(int $roomId)
+    public function bookSlots(int $id)
     {
         /**
          * Prüfen, ob ein*e User*in eingeloggt ist. Wenn nicht, geben wir einen Fehler 403 Forbidden zurück. Dazu haben
@@ -109,7 +109,7 @@ class BookingController
              * Wir gehen nun also alle $dates durch und prüfen, ob es bereits Bookings in diesem Zeitraum gibt.
              */
             foreach ($dates as $startAndEndDate) {
-                if (Booking::existsForRoomAndTime($roomId, $startAndEndDate['start'], $startAndEndDate['end'])) {
+                if (Booking::existsForRoomAndTime($id, $startAndEndDate['start'], $startAndEndDate['end'])) {
                     /**
                      * Gibt es bereits Bookings in dem Timeslot für den Raum, so legen wir den Schalter um und beenden
                      * die Schleife.
@@ -130,7 +130,7 @@ class BookingController
                     $booking->fill([
                         'user_id' => User::getLoggedIn()->id,
                         'foreign_table' => Room::class,
-                        'foreign_id' => $roomId,
+                        'foreign_id' => $id,
                         'time_from' => $startAndEndDate['start'],
                         'time_to' => $startAndEndDate['end']
                     ]);
@@ -157,7 +157,7 @@ class BookingController
         /**
          * Nun leiten wir weiter zum Buchungsformular.
          */
-        Redirector::redirect("/rooms/$roomId/booking/time");
+        Redirector::redirect("/rooms/$id/booking/time");
     }
 
 }

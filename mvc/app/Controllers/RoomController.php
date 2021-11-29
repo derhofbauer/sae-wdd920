@@ -19,19 +19,27 @@ class RoomController
 
     /**
      * Alle Einträge listen.
+     * @todo: comment
      */
     public function index()
     {
         /**
          * Alle Objekte über das Model aus der Datenbank laden.
+         * @todo: comment
          */
-        $rooms = Room::all();
+        if (isset($_GET['filters']) && !empty($_GET['filters'])) {
+            $rooms = Room::getByRoomFeaturesFilter($_GET['filters']);
+        } else {
+            $rooms = Room::all();
+        }
+        $roomFeatures = RoomFeature::all();
 
         /**
          * View laden und Daten übergeben.
          */
         View::render('rooms/index', [
-            'rooms' => $rooms
+            'rooms' => $rooms,
+            'roomFeatures' => $roomFeatures
         ]);
     }
 

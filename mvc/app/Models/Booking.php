@@ -126,8 +126,9 @@ class Booking extends AbstractModel
          * Query ausführen.
          */
         $result = $database->query(
-            "SELECT * FROM $tablename WHERE foreign_table = 'rooms' AND foreign_id = ? AND time_from >= ? AND time_to <= ?",
+            "SELECT * FROM $tablename WHERE foreign_table = ? AND foreign_id = ? AND time_from >= ? AND time_to <= ?",
             [
+                's:foreign_table' => Room::class,
                 'i:foreign_id' => $roomId,
                 's:time_from' => $startDate,
                 's:time_to' => $endDate
@@ -155,5 +156,103 @@ class Booking extends AbstractModel
          * Wir verwenden die findByRoomAndDate()-Methode und prüfen, ob das Ergebnis leer ist oder nicht.
          */
         return !empty(self::findByRoomAndDate($roomId, $startDate, $endDate));
+    }
+
+    /**
+     * @param ?int $userId
+     *
+     * @return array
+     * @todo: comment
+     */
+    public static function findRoomBookingsByUser(?int $userId)
+    {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::getTablenameFromClassname();
+
+        /**
+         * Query ausführen.
+         */
+        $result = $database->query(
+            "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ? AND time_to >= NOW() ORDER BY time_from ASC",
+            [
+                's:foreign_table' => Room::class,
+                'i:user_id' => $userId,
+            ]
+        );
+
+        /**
+         * Datenbankergebnis verarbeiten und zurückgeben.
+         */
+        return self::handleResult($result);
+    }
+
+    /**
+     * @param ?int $userId
+     *
+     * @return array
+     * @todo: comment
+     */
+    public static function findEquipmentBookingsByUser(?int $userId)
+    {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::getTablenameFromClassname();
+
+        /**
+         * Query ausführen.
+         */
+        $result = $database->query(
+//            "SELECT *, COUNT(*) as units FROM $tablename WHERE foreign_table = ? AND user_id = ? GROUP BY foreign_id",
+            "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ?",
+            [
+                's:foreign_table' => Equipment::class,
+                'i:user_id' => $userId,
+            ]
+        );
+
+        /**
+         * Datenbankergebnis verarbeiten und zurückgeben.
+         */
+        return self::handleResult($result);
+    }
+
+    /**
+     * @return object|null
+     * @todo: comment
+     */
+    public function bookable()
+    {
+        return ($this->foreign_table)::find($this->foreign_id);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     * @todo: comment
+     */
+    public function getTimeFromFormatted()
+    {
+        return (new DateTime($this->time_from))->format(DateTime::HUMAN_READABLE_AT_FROM);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     * @todo: comment
+     */
+    public function getTimeToFormatted()
+    {
+        return (new DateTime($this->time_to))->format(DateTime::HUMAN_READABLE_AT_TO);
     }
 }

@@ -13,6 +13,12 @@ class DateTime extends \DateTime
     const MYSQL_DATETIME = 'Y-m-d H:i:s';
 
     /**
+     * @todo: comment
+     */
+    const HUMAN_READABLE_AT_FROM = 'd.m.Y, H:i';
+    const HUMAN_READABLE_AT_TO = 'H:i';
+
+    /**
      * Was soll ausgegeben werden, wenn das Objekt in einen String konvertiert werden soll?
      *
      * @return string

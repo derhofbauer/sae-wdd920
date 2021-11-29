@@ -8,6 +8,32 @@
     endif; ?>
 </h2>
 
+<div class="filters container">
+    <form class="form-inline" method="get">
+        <div class="row">
+            <?php
+            /**
+             * @todo: CONTINUE HERE!
+             * @todo: Pre-select checkboxes when present in $_GET.
+             */
+            foreach ($roomFeatures as $roomFeature): ?>
+                <div class="form-check col">
+                    <input type="checkbox" value="<?php
+                    echo $roomFeature->id; ?>" class="form-check-input" name="filters[]" id="filters[<?php
+                    echo $roomFeature->id; ?>]">
+                    <label for="filters[<?php
+                    echo $roomFeature->id; ?>]"><?php
+                        echo $roomFeature->name; ?></label>
+                </div>
+            <?php
+            endforeach; ?>
+            <div class="col">
+                <button class="btn btn-primary" type="submit">Filtern</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <table class="table table-striped">
     <thead>
     <th>#</th>
@@ -37,7 +63,9 @@
                 endif; ?>
             </td>
             <td>
-                <a href="<?php echo BASE_URL; ?>/rooms/<?php echo $room->id; ?>/show"><?php
+                <a href="<?php
+                echo BASE_URL; ?>/rooms/<?php
+                echo $room->id; ?>/show"><?php
                     echo $room->name; ?>
                 </a>
             </td>

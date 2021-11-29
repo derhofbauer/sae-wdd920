@@ -13,6 +13,7 @@ use App\Controllers\RoomController;
 use App\Controllers\RoomFeatureController;
 use App\Controllers\CartController;
 use App\Controllers\CheckoutController;
+use App\Controllers\ProfileController;
 
 /**
  * Die Dateien im /routes Ordner beinhalten ein Mapping von einer URL auf eine eindeutige Controller & Action
@@ -97,6 +98,12 @@ return [
      */
     '/rooms/{id}/booking/time' => [BookingController::class, 'selectSlots'],
     '/rooms/{id}/booking/do' => [BookingController::class, 'bookSlots'],
+
+    /**
+     * User Profile Routes
+     */
+    '/profile' => [ProfileController::class, 'profile'],
+    '/profile/update' => [ProfileController::class, 'update'],
 
     // ...
 ];

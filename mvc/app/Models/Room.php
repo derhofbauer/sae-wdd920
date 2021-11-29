@@ -373,4 +373,56 @@ class Room extends AbstractModel
          */
         return $this->getImages();
     }
+
+    /**
+     * @param array $roomFeatureIds
+     *
+     * @return array
+     * @todo: comment
+     */
+    public static function getByRoomFeaturesFilter(array $roomFeatureIds): array
+    {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::getTablenameFromClassname();
+        $mappingTable = self::TABLENAME_ROOMFEATURES_MM;
+
+        $roomsByFeatures = [];
+
+        foreach ($roomFeatureIds as $roomFeatureId) {
+            /**
+             * Query ausführen.
+             *
+             * Wurde in den Funktionsparametern eine Sortierung definiert, so wenden wir sie hier an, andernfalls rufen wir
+             * alles ohne Sortierung ab.
+             */
+            $result = $database->query(
+                "SELECT $tablename.* FROM $mappingTable JOIN $tablename ON $mappingTable.room_id = $tablename.id WHERE $mappingTable.room_feature_id = ?",
+                [
+                    'i:room_feature_id' => $roomFeatureId
+                ]
+            );
+
+            /**
+             * Datenbankergebnis verarbeiten und zurückgeben.
+             */
+            $roomsByFeatures[$roomFeatureId] = self::handleResult($result);
+        }
+
+        return array_intersect(...$roomsByFeatures);
+    }
+
+    /**
+     * @return string
+     * @todo: comment
+     */
+    public function __toString(): string
+    {
+        return $this->id;
+    }
 }

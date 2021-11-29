@@ -104,4 +104,56 @@ class User extends AbstractUser
             return $result;
         }
     }
+
+    /**
+     * @todo: comment
+     */
+    public function getDisplayName()
+    {
+        return !empty($this->username) ? $this->username : $this->email;
+    }
+
+    /**
+     * @todo: comment
+     */
+    public function roomBookings()
+    {
+        return Booking::findRoomBookingsByUser($this->id);
+    }
+
+    /**
+     * @todo: comment
+     */
+    public function equipmentBookings($groupByEquipment = false)
+    {
+        $equipmentBookings = Booking::findEquipmentBookingsByUser($this->id);
+        if ($groupByEquipment === false) {
+            return $equipmentBookings;
+        }
+
+        $groupedBookings = [];
+        foreach ($equipmentBookings as $equipmentBooking) {
+            if (!isset($groupedBookings[$equipmentBooking->foreign_id])) {
+                $groupedBookings[$equipmentBooking->foreign_id] = $equipmentBooking;
+                $groupedBookings[$equipmentBooking->foreign_id]->units = 1;
+            } else {
+                $groupedBookings[$equipmentBooking->foreign_id]->units++;
+            }
+        }
+
+        usort($groupedBookings, function ($a, $b) {
+            if ($a->units < $b->units) {
+                return -1;
+            }
+            if ($a->units > $b->units) {
+                return 1;
+            }
+            if ($a->units === $b->units) {
+                return 0;
+            }
+        });
+        $groupedBookings = array_reverse($groupedBookings);
+
+        return $groupedBookings;
+    }
 }
