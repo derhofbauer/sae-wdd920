@@ -13,7 +13,8 @@ class DateTime extends \DateTime
     const MYSQL_DATETIME = 'Y-m-d H:i:s';
 
     /**
-     * @todo: comment
+     * Hier definieren wir uns custom Formate zur Formatierung von Zeitslots, die wir verwenden können, wann immer wir
+     * sie brauchen.
      */
     const HUMAN_READABLE_AT_FROM = 'd.m.Y, H:i';
     const HUMAN_READABLE_AT_TO = 'H:i';

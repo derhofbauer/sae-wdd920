@@ -159,10 +159,11 @@ class Booking extends AbstractModel
     }
 
     /**
+     * Alle Raumbuchungen zu einem Account finden.
+     *
      * @param ?int $userId
      *
      * @return array
-     * @todo: comment
      */
     public static function findRoomBookingsByUser(?int $userId)
     {
@@ -177,6 +178,8 @@ class Booking extends AbstractModel
 
         /**
          * Query ausführen.
+         *
+         * Beachte hier den Filter auf die polymorphe Beziehung mit foreign_table.
          */
         $result = $database->query(
             "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ? AND time_to >= NOW() ORDER BY time_from ASC",
@@ -193,10 +196,11 @@ class Booking extends AbstractModel
     }
 
     /**
+     * Alle Raumbuchungen zu einem Account finden.
+     *
      * @param ?int $userId
      *
      * @return array
-     * @todo: comment
      */
     public static function findEquipmentBookingsByUser(?int $userId)
     {
@@ -211,9 +215,15 @@ class Booking extends AbstractModel
 
         /**
          * Query ausführen.
+         *
+         * Beachte hier den Filter auf die polymorphe Beziehung mit foreign_table.
          */
         $result = $database->query(
-//            "SELECT *, COUNT(*) as units FROM $tablename WHERE foreign_table = ? AND user_id = ? GROUP BY foreign_id",
+        /**
+         * Groupen wäre elegant, aber damit kann leider die handleResult()-Methode unseres AbstractModel nicht umgehen:
+         *
+         * "SELECT *, COUNT(*) as units FROM $tablename WHERE foreign_table = ? AND user_id = ? GROUP BY foreign_id",
+         */
             "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ?",
             [
                 's:foreign_table' => Equipment::class,
@@ -228,31 +238,53 @@ class Booking extends AbstractModel
     }
 
     /**
+     * Das buchbare Objekt zum aktuellen Booking laden.
+     *
+     * Ein Booking Objekt kann entweder einen Raum oder ein Equipment als buchbares Objekt (bookable Object)
+     * referenzieren. Hier holen wir es, egal welchen Typ das bookable hat.
+     *
      * @return object|null
-     * @todo: comment
      */
     public function bookable()
     {
+        /**
+         * Die erste runde Klammer beinhaltet einen kompletten Namespace+Klassennamen als String und somit können wir
+         * direkt eine static function von dieser Klasse aufrufen, ohne vorher erst eine Variable dafür zu erstellen.
+         */
         return ($this->foreign_table)::find($this->foreign_id);
     }
 
     /**
+     * Begin-Zeit der Buchung als String formatieren.
+     *
      * @return string
      * @throws \Exception
-     * @todo: comment
      */
     public function getTimeFromFormatted()
     {
+        /**
+         * Die erste runde Klammer erstellt ein neues \Core\DateTime Objekt und ruft dann direkt die format()-Methode
+         * davon auf. Das hat den Sinn, dass wir nicht eine Variable dafür erstellen müssen und dann die
+         * format()-Methode auf die Variable ausführen. Es hätte denselben Effekt, aber wir sparen uns eine Variable,
+         * da wir ohnehin nur ein einziges Statement in dieser Funktion haben.
+         */
         return (new DateTime($this->time_from))->format(DateTime::HUMAN_READABLE_AT_FROM);
     }
 
     /**
+     * End-Zeit der Buchung als String formatieren.
+     *
      * @return string
      * @throws \Exception
-     * @todo: comment
      */
     public function getTimeToFormatted()
     {
+        /**
+         * Die erste runde Klammer erstellt ein neues \Core\DateTime Objekt und ruft dann direkt die format()-Methode
+         * davon auf. Das hat den Sinn, dass wir nicht eine Variable dafür erstellen müssen und dann die
+         * format()-Methode auf die Variable ausführen. Es hätte denselben Effekt, aber wir sparen uns eine Variable,
+         * da wir ohnehin nur ein einziges Statement in dieser Funktion haben.
+         */
         return (new DateTime($this->time_to))->format(DateTime::HUMAN_READABLE_AT_TO);
     }
 }

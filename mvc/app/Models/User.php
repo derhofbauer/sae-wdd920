@@ -84,12 +84,15 @@ class User extends AbstractUser
             /**
              * Hat das Objekt keine id, so müssen wir es neu anlegen.
              */
-            $result = $database->query("INSERT INTO $tablename SET email = ?, username = ?, password = ?, is_admin = ?", [
-                's:email' => $this->email,
-                's:username' => $this->username,
-                's:password' => $this->password,
-                'i:is_admin' => $this->is_admin
-            ]);
+            $result = $database->query(
+                "INSERT INTO $tablename SET email = ?, username = ?, password = ?, is_admin = ?",
+                [
+                    's:email' => $this->email,
+                    's:username' => $this->username,
+                    's:password' => $this->password,
+                    'i:is_admin' => $this->is_admin
+                ]
+            );
 
             /**
              * Ein INSERT Query generiert eine neue id, diese müssen wir daher extra abfragen und verwenden daher die
@@ -106,41 +109,76 @@ class User extends AbstractUser
     }
 
     /**
-     * @todo: comment
+     * Hilfsfunktion zur Ausgabe eines Anzeigenamens.
+     *
+     * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return !empty($this->username) ? $this->username : $this->email;
     }
 
     /**
-     * @todo: comment
+     * Hilfsfunktion zur Ausgabe aller Raumbuchungen für diese*n User*in.
+     *
+     * @return array<Booking>
      */
-    public function roomBookings()
+    public function roomBookings(): array
     {
         return Booking::findRoomBookingsByUser($this->id);
     }
 
     /**
-     * @todo: comment
+     * Hilfsfunktion zur Ausgabe aller Equipmentbuchungen für diese*n User*in.
+     *
+     * @param bool $groupByEquipment
+     *
+     * @return array<Booking>
      */
-    public function equipmentBookings($groupByEquipment = false)
+    public function equipmentBookings(bool $groupByEquipment = false): array
     {
+        /**
+         * Alle Equipment Buchungen holen.
+         */
         $equipmentBookings = Booking::findEquipmentBookingsByUser($this->id);
+        /**
+         * Wenn diese nicht gruppiert, sondern als einzelne Einträge zurückgegeben werden sollen, so returnen wir hier
+         * direkt.
+         */
         if ($groupByEquipment === false) {
             return $equipmentBookings;
         }
 
+        /**
+         * Andernfalls bereiten wir uns einen Array vor.
+         */
         $groupedBookings = [];
+        /**
+         * Nun gehen wir alle zuvor geladenen Buchungen durch.
+         */
         foreach ($equipmentBookings as $equipmentBooking) {
+            /**
+             * Gibt es noch keinen Eintrag in $groupedBookings für das verknüpfte Equipment, so erstellen wir den
+             * Eintrag und erstellen die units-Property dynamisch mit dem Wert von 1.
+             */
             if (!isset($groupedBookings[$equipmentBooking->foreign_id])) {
                 $groupedBookings[$equipmentBooking->foreign_id] = $equipmentBooking;
                 $groupedBookings[$equipmentBooking->foreign_id]->units = 1;
             } else {
+                /**
+                 * Gibt es einen Eintrag bereits, so erhöhen wir die units-Property um 1.
+                 */
                 $groupedBookings[$equipmentBooking->foreign_id]->units++;
             }
         }
 
+        /**
+         * Nun sortieren wir das Ergebnis anhand der Anzahl der gebuchten Elemente (units).
+         *
+         * Die usort()-Funktion akzeptiert als 1. Parameter den zu sortierenden Array und als 2. Parameter eine Funktion.
+         * Diese Callback-Funktion vergleicht immer zwei Elemente aus dem Array und ändert die Reihenfolge bei Bedarf,
+         * je nachdem ob Werte kleiner als 0, größer als 0 oder gleich 0 zurückgegeben werdne.
+         */
         usort($groupedBookings, function ($a, $b) {
             if ($a->units < $b->units) {
                 return -1;
@@ -152,8 +190,14 @@ class User extends AbstractUser
                 return 0;
             }
         });
+        /**
+         * Nun kehren wir noch die Reihenfolge des Arrays um, damit wir die größten Werte zuerst haben.
+         */
         $groupedBookings = array_reverse($groupedBookings);
 
+        /**
+         * Ergebnis zurückgeben.
+         */
         return $groupedBookings;
     }
 }

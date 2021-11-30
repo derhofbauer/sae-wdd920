@@ -375,10 +375,11 @@ class Room extends AbstractModel
     }
 
     /**
+     * Alle Räume abrufen, auf die die ausgewählten Raumfeatures zutreffen.
+     *
      * @param array $roomFeatureIds
      *
      * @return array
-     * @todo: comment
      */
     public static function getByRoomFeaturesFilter(array $roomFeatureIds): array
     {
@@ -387,19 +388,26 @@ class Room extends AbstractModel
          */
         $database = new Database();
         /**
-         * Tabellennamen berechnen.
+         * Tabellennamen berechnen/aus der Klassenkonstante holen.
          */
         $tablename = self::getTablenameFromClassname();
         $mappingTable = self::TABLENAME_ROOMFEATURES_MM;
 
+        /**
+         * Array vorbereiten.
+         *
+         * Dieser Array wird mehrere Sub-Arrays haben. Einen pro in den Filtern ausgewähltem RoomFeature. Wir werden
+         * also pro ausgewähltem RoomFeature-Filter alle Räume abrufen und dann aus allen diesen Sub-Arrays die
+         * Schnittmenge (array_intersect) bilden.
+         */
         $roomsByFeatures = [];
 
+        /**
+         * Ausgewählte RoomFeatures-Filter durchgehen.
+         */
         foreach ($roomFeatureIds as $roomFeatureId) {
             /**
              * Query ausführen.
-             *
-             * Wurde in den Funktionsparametern eine Sortierung definiert, so wenden wir sie hier an, andernfalls rufen wir
-             * alles ohne Sortierung ab.
              */
             $result = $database->query(
                 "SELECT $tablename.* FROM $mappingTable JOIN $tablename ON $mappingTable.room_id = $tablename.id WHERE $mappingTable.room_feature_id = ?",
@@ -409,20 +417,36 @@ class Room extends AbstractModel
             );
 
             /**
-             * Datenbankergebnis verarbeiten und zurückgeben.
+             * Datenbankergebnis verarbeiten und in das vorbereitete Array speichern.
              */
             $roomsByFeatures[$roomFeatureId] = self::handleResult($result);
         }
 
+        /**
+         * Nun generieren wir die Schnittmenge aller zuvor berechneter Arrays. Kommt ein Raum in allen Arrays vor und
+         * ist somit mit allen ausgewählten RoomFeature verknüpft, so wird er im Ergebnis der array_interesct() Funktion
+         * enthalten sein.
+         * Die array_intersect()-Funktion erwartet mehrere Arrays, daher spreaden wir hier den vorhin vorbereiteten
+         * Array in seine Sub-Arrays.
+         */
         return array_intersect(...$roomsByFeatures);
     }
 
     /**
+     * Damit die array_intersect()-Funktion in self::getByRoomFeaturesFilter() die einzelnen Arrays vergleichen kann,
+     * werden alle Elemente der Arrays als Strings verglichen. Nun sind aber Objekte in diesen Arrays, wir müssen also
+     * dafür sorgen, dass diese Objekte in Strings konvertiert werden können, damit kein Fehler entsteht.
+     *
+     * Die __toString() Magic Method wird dann aufgerufen, wenn ein Objekt in einen String konvertiert werden soll.
+     *
      * @return string
-     * @todo: comment
      */
     public function __toString(): string
     {
+        /**
+         * Für den Fall von array_intersect(), reicht hier die ID, da die Daten ohnehin direkt aus der Datenbank kommen
+         * und nicht verändert worden sein können.
+         */
         return $this->id;
     }
 }

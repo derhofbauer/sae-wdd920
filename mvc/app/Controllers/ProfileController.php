@@ -10,24 +10,47 @@ use Core\Validator;
 use Core\View;
 
 /**
- * @todo: comment
+ * Profile Controller
  */
 class ProfileController
 {
+
+    /**
+     * Wir können die AuthMiddleware auch im Konstruktor aufrufen, wenn alle Actions dieselbe Methode der AuthMiddleware
+     * aufgerufen hätten.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         AuthMiddleware::isLoggedInOrFail();
     }
 
+    /**
+     * Benutzer*innen-Profil anzeigen
+     *
+     * @throws \Exception
+     */
     public function profile()
     {
+        /**
+         * Eingeloggte*n User*in aus der DB holen.
+         */
         $user = User::getLoggedIn();
 
+        /**
+         * View laden und Daten übergeben.
+         */
         View::render('profile/index', [
             'user' => $user
         ]);
     }
 
+    /**
+     * Formulardaten entgegennehmen und Bernutzer*innen-Profil aktualisieren.
+     *
+     * @throws \Exception
+     */
     public function update()
     {
         /**
@@ -39,8 +62,14 @@ class ProfileController
          * 6) Redirect zum Profil
          */
 
+        /**
+         * Eingeloggte*n User*in aus der DB holen.
+         */
         $user = User::getLoggedIn();
 
+        /**
+         * Daten validieren.
+         */
         $validator = new Validator();
         $validator->email($_POST['email'], 'E-Mail', required: true);
         $validator->unique($_POST['email'], 'E-Mail', 'users', 'email', ignoreThisId: $user->id);
@@ -65,7 +94,7 @@ class ProfileController
         $errors = $validator->getErrors();
 
         /**
-         * Wenn der Fehler-Array nicht leer ist und es somit Fehler gibt ...
+         * Wenn der Fehler-Array nicht leer ist und es somit Fehler gibt, ...
          */
         if (!empty($errors)) {
             /**
@@ -77,7 +106,7 @@ class ProfileController
         }
 
         /**
-         * Kommen wir an diesen Punkt, können wir sicher sein, dass die E-Mail Adresse und der Username noch nicht
+         * Kommen wir an diesen Punkt, können wir sicher sein, dass die E-Mail-Adresse und der Username noch nicht
          * verwendet werden und alle eingegebenen Daten korrekt validiert werden konnten.
          */
         $user->email = trim($_POST['email']);

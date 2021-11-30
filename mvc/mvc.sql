@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Erstellungszeit: 24. Nov 2021 um 16:38
--- Server-Version: 10.5.9-MariaDB-1:10.5.9+maria~focal
--- PHP-Version: 7.4.16
+-- Erstellungszeit: 30. Nov 2021 um 10:37
+-- Server-Version: 10.5.12-MariaDB-1:10.5.12+maria~focal
+-- PHP-Version: 7.4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -50,7 +50,11 @@ INSERT INTO `bookings` (`id`, `user_id`, `time_from`, `time_to`, `foreign_table`
 (4, 1, NULL, NULL, 'App\\Models\\Equipment', 3, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
 (5, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:19:47', '2021-11-24 16:19:47', NULL),
 (6, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:23:47', '2021-11-24 16:23:47', NULL),
-(7, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:28:29', '2021-11-24 16:28:29', NULL);
+(7, 1, NULL, NULL, 'App\\Models\\Equipment', 4, '2021-11-24 16:28:29', '2021-11-24 16:28:29', NULL),
+(8, 1, '2021-12-01 08:00:00', '2021-12-01 09:00:00', 'App\\Models\\Room', 1, '2021-11-29 15:06:36', '2021-11-29 15:06:36', NULL),
+(9, 1, '2021-12-01 09:00:00', '2021-12-01 10:00:00', 'App\\Models\\Room', 1, '2021-11-29 15:06:36', '2021-11-29 15:06:36', NULL),
+(10, 1, '2021-12-01 10:00:00', '2021-12-01 11:00:00', 'App\\Models\\Room', 1, '2021-11-29 15:06:36', '2021-11-29 15:06:36', NULL),
+(11, 1, '2021-12-01 11:00:00', '2021-12-01 12:00:00', 'App\\Models\\Room', 1, '2021-11-29 15:06:36', '2021-11-29 15:06:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -126,7 +130,10 @@ CREATE TABLE `rooms_room_features_mm` (
 INSERT INTO `rooms_room_features_mm` (`id`, `room_id`, `room_feature_id`) VALUES
 (1, 2, 1),
 (4, 3, 1),
-(5, 3, 2);
+(5, 3, 2),
+(10, 2, 4),
+(11, 3, 4),
+(12, 4, 4);
 
 -- --------------------------------------------------------
 
@@ -150,7 +157,8 @@ CREATE TABLE `room_features` (
 INSERT INTO `room_features` (`id`, `name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Beamer', 'Beamer Desc', '2021-10-25 14:19:49', '2021-11-10 15:24:49', NULL),
 (2, 'Flipchart', 'Flipchart Desc', '2021-10-25 14:19:49', '2021-11-10 15:25:01', NULL),
-(3, 'Audioboxen', '', '2021-11-10 15:22:45', '2021-11-15 14:25:36', NULL);
+(3, 'Audioboxen', '', '2021-11-10 15:22:45', '2021-11-15 14:25:36', NULL),
+(4, 'Whiteboard', 'Whiteboard', '2021-11-29 16:07:00', '2021-11-29 16:07:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,7 +204,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `is_admin`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'adent', 'arthur.dent@galaxy.com', '$2a$12$Iok3WcgII9wqge7tzKDnbeRBQdbunJOooGflz0VixsFf0d/6lmyL2', 1, '2021-10-25 14:22:24', '2021-10-25 14:23:17', NULL);
+(1, 'adent', 'arthur.dent@galaxy.com', '$2y$10$5STpehYeMvyZ2Z5wA.X1/.BX5TtzNXRG6zMF2RYAWtktTHjpYnyl2', 1, '2021-10-25 14:22:24', '2021-11-29 14:45:54', NULL);
 
 --
 -- Indizes der exportierten Tabellen
@@ -260,7 +268,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für Tabelle `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT für Tabelle `equipments`
@@ -278,13 +286,13 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT für Tabelle `rooms_room_features_mm`
 --
 ALTER TABLE `rooms_room_features_mm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT für Tabelle `room_features`
 --
 ALTER TABLE `room_features`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT für Tabelle `types`

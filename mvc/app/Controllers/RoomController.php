@@ -19,13 +19,14 @@ class RoomController
 
     /**
      * Alle Einträge listen.
-     * @todo: comment
      */
     public function index()
     {
         /**
          * Alle Objekte über das Model aus der Datenbank laden.
-         * @todo: comment
+         *
+         * Wurden filter-Checkboxen angehakerlt und über die $_GET Parameter übergeben, so filtern wir hier die Räume.
+         * Wurden keine Filter übergeben, zeigen wir alle Räume.
          */
         if (isset($_GET['filters']) && !empty($_GET['filters'])) {
             $rooms = Room::getByRoomFeaturesFilter($_GET['filters']);
