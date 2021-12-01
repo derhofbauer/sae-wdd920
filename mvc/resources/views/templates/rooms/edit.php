@@ -1,6 +1,4 @@
-<!-- @todo: implement helper function for BASE_URL url generation -->
-<form action="<?php
-echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart/form-data">
+<form action="<?php url_e("/rooms/{$room->id}/update"); ?>" method="post" enctype="multipart/form-data">
 
     <div class="row">
         <div class="col">
@@ -45,8 +43,8 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart
 
             foreach ($roomFeatures as $roomFeature): ?>
                 <div class="form-check">
-                    <input type="checkbox" value="<?php echo $roomFeature->id; ?>" name="room-features[]" id="room-features[<?php echo $roomFeature->id; ?>]" class="form-check-input"<?php echo (in_array($roomFeature->id, $idsOfFeaturesOfCurrentRoom)) ? ' checked' : '' ?>>
-                    <label class="form-check-label" for="room-features[<?php echo $roomFeature->id; ?>]"><?php echo $roomFeature->name; ?></label>
+                    <input type="checkbox" value="<?php _e($roomFeature->id); ?>" name="room-features[]" id="room-features[<?php _e($roomFeature->id); ?>]" class="form-check-input"<?php _e(in_array($roomFeature->id, $idsOfFeaturesOfCurrentRoom) ? ' checked' : ''); ?>>
+                    <label class="form-check-label" for="room-features[<?php _e($roomFeature->id); ?>]"><?php _e($roomFeature->name); ?></label>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -70,8 +68,8 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart
             <img src="<?php echo BASE_URL . $image; ?>" alt="<?php echo $room->name; ?>" class="thumbnail">
 
             <div class="form-check">
-                <input type="checkbox" value="<?php echo $image; ?>" name="delete-images[]" id="delete-images[<?php echo $image; ?>]" class="form-check-input">
-                <label class="form-check-label" for="delete-images[<?php echo $image; ?>]">Löschen?</label>
+                <input type="checkbox" value="<?php _e($image); ?>" name="delete-images[]" id="delete-images[<?php _e($image); ?>]" class="form-check-input">
+                <label class="form-check-label" for="delete-images[<?php _e($image); ?>]">Löschen?</label>
             </div>
         </div>
         <?php endforeach; ?>
@@ -79,8 +77,7 @@ echo BASE_URL . "/rooms/{$room->id}/update" ?>" method="post" enctype="multipart
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="<?php
-        echo BASE_URL . '/rooms'; ?>" class="btn btn-danger">Cancel</a>
+        <a href="<?php url_e('/rooms'); ?>" class="btn btn-danger">Cancel</a>
     </div>
 
 </form>

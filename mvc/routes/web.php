@@ -14,6 +14,7 @@ use App\Controllers\RoomFeatureController;
 use App\Controllers\CartController;
 use App\Controllers\CheckoutController;
 use App\Controllers\ProfileController;
+use App\Controllers\TypeController;
 
 /**
  * Die Dateien im /routes Ordner beinhalten ein Mapping von einer URL auf eine eindeutige Controller & Action
@@ -78,6 +79,17 @@ return [
     '/equipments/{id}/delete/confirm' => [EquipmentController::class, 'deleteConfirm'],
     '/equipments/create' => [EquipmentController::class, 'create'],
     '/equipments/store' => [EquipmentController::class, 'store'],
+
+    /**
+     * Types Routes
+     */
+    '/types' => [TypeController::class, 'index'],
+    '/types/{id}' => [TypeController::class, 'edit'],
+    '/types/{id}/update' => [TypeController::class, 'update'],
+    '/types/{id}/delete' => [TypeController::class, 'delete'],
+    '/types/{id}/delete/confirm' => [TypeController::class, 'deleteConfirm'],
+    '/types/create' => [TypeController::class, 'create'],
+    '/types/store' => [TypeController::class, 'store'],
 
     /**
      * Cart Routes

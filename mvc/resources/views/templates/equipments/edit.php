@@ -1,5 +1,4 @@
-<!-- @todo: implement helper function for BASE_URL url generation -->
-<form action="<?php echo BASE_URL . "/equipments/{$equipment->id}/update" ?>" method="post">
+<form action="<?php url_e("/equipments/{$equipment->id}/update"); ?>" method="post">
 
     <div class="row">
         <div class="col">
@@ -40,8 +39,7 @@
 
     <div class="buttons mt-1">
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="<?php
-        echo BASE_URL . '/rooms'; ?>" class="btn btn-danger">Cancel</a>
+        <a href="<?php url_e('/rooms');?>" class="btn btn-danger">Cancel</a>
     </div>
 
 </form>

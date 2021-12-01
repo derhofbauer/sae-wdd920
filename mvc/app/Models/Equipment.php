@@ -107,16 +107,18 @@ class Equipment extends AbstractModel
 
     /**
      * @return ?Type
-     * @todo: Implement type relation & form dropdowns for types!
      *
      * Hier legen wir eine Methode an, damit wir später, sofern wir noch genug Zeit haben, die Relation zu den Types
      * herstellen können, ohne die Views anpassen zu müssen.
      */
     public function type(): ?Type
     {
-       if (!empty($this->type_id)) {
-           return Type::find($this->type_id);
-       }
-       return null;
+        /**
+         * Ist das Equipment mit einem Typ verknüpft, so laden wir den Type und geben ihn zurück.
+         */
+        if (!empty($this->type_id)) {
+            return Type::find($this->type_id);
+        }
+        return null;
     }
 }

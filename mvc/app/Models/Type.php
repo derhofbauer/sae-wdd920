@@ -91,8 +91,10 @@ class Type extends AbstractModel
     }
 
     /**
+     * Damit wir in den Templates einfach direkt einen Type echoen können, definieren wir hier, was passiert, wenn ein
+     * Type-Objekt in einen String konvertiert werden soll.
+     *
      * @return string
-     * @todo: comment
      */
     public function __toString(): string
     {

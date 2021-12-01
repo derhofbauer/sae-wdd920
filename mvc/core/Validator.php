@@ -219,6 +219,41 @@ class Validator
     }
 
     /**
+     * Datum validieren.
+     *
+     * @param mixed  $value
+     * @param string $label
+     * @param bool   $required
+     *
+     * @return bool
+     */
+    public function date(mixed $value, string $label, bool $required = false): bool
+    {
+        /**
+         * Zunächst möchten wir validieren, ob das Feld required ist oder nicht.
+         */
+        if ($this->validateRequired($required, $value, $label) === false) {
+            return false;
+        }
+
+        /**
+         * Nun verwenden wir einen try-catch-Block um ein neues DateTime Objekt zu erstellen. Wenn PHP den Wert in ein
+         * DateTime Objekt umwandeln und somit korrekt als Datum interpretieren kann, ist alles gut - andernfalls wirft
+         * die DateTime Klasse eine Exception die wir im catch-Block fangen.
+         */
+        try {
+            (new DateTime($value));
+            return true;
+        } catch (\Exception $exception) {
+            /**
+             * Fehler schreiben.
+             */
+            $this->errors[] = sprintf($this->errorMessages['date'], $label);
+            return false;
+        }
+    }
+
+    /**
      * Hochgeladene Dateien validieren.
      *
      * @param array       $files
@@ -288,50 +323,40 @@ class Validator
     }
 
     /**
-     * @param mixed  $value
-     * @param string $label
-     * @param bool   $required
+     * Sollen Array-Input Fehler (bspw. Listen an Checkboxen) validiert werden, so muss jeder Wert aus der Liste
+     * einzeln validiert werden.
      *
-     * @return bool
-     * @todo: comment
-     */
-    public function date(mixed $value, string $label, bool $required = false): bool
-    {
-        if ($this->validateRequired($required, $value, $label) === false) {
-            return false;
-        }
-
-        try {
-            (new DateTime($value));
-            return true;
-        } catch (\Exception $exception) {
-            $this->errors[] = sprintf($this->errorMessages['date'], $label);
-            return false;
-        }
-    }
-
-    /**
      * @param array  $value
      * @param string $type
      * @param string $label
      * @param bool   $required
      *
      * @return bool
-     * @todo: comment
      */
     public function _array(array $value, string $label, string $type = 'intRegex', bool $required = false): bool
     {
+        /**
+         * Ist der Array required aber leer, schreiben wir einen Fehler.
+         */
         if ($required === true && empty($value)) {
             $this->errors[] = sprintf($this->errorMessages['array-required'], $label);
             return false;
         }
 
+        /**
+         * Nun gehen wir alle Werte aus dem Array durch und validieren jeden einzelnen anhand des $type, der übergeben
+         * wurde. Dazu verwenden wir die oben definierte __call() Magic Method.
+         */
         foreach ($value as $item) {
             if ($this->$type($item, label: $label) === false) {
                 return false;
             }
         }
 
+        /**
+         * Ist bisher kein Fehler aufgetreten und wurde nicht false zurückgegeben, so ist die Validierung erfolgreich
+         * gewesen.
+         */
         return true;
     }
 

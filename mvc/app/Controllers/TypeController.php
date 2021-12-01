@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Equipment;
 use App\Models\Type;
 use Core\Helpers\Redirector;
 use Core\Middlewares\AuthMiddleware;
@@ -11,10 +10,21 @@ use Core\Validator;
 use Core\View;
 
 /**
- * Equipment Controller
+ * Type Controller
  */
-class  EquipmentController
+class TypeController
 {
+
+    /**
+     * Wir können die AuthMiddleware auch im Konstruktor aufrufen, wenn alle Actions dieselbe Methode der AuthMiddleware
+     * aufgerufen hätten.
+     *
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        AuthMiddleware::isAdminOrFail();
+    }
 
     /**
      * Alle Einträge listen.
@@ -24,35 +34,13 @@ class  EquipmentController
         /**
          * Alle Objekte über das Model aus der Datenbank laden.
          */
-        $equipments = Equipment::all();
+        $types = Type::all();
 
         /**
          * View laden und Daten übergeben.
          */
-        View::render('equipments/index', [
-            'equipments' => $equipments
-        ]);
-    }
-
-    /**
-     * Einzelnes Equipment anzeigen.
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     */
-    public function show(int $id)
-    {
-        /**
-         * Gewünschtes Equipment aus der DB laden.
-         */
-        $equipment = Equipment::findOrFail($id);
-
-        /**
-         * View laden und Daten übergeben.
-         */
-        View::render('equipments/show', [
-            'equipment' => $equipment
+        View::render('types/index', [
+            'types' => $types
         ]);
     }
 
@@ -75,15 +63,13 @@ class  EquipmentController
         /**
          * Gewünschtes Element über das zugehörige Model aus der Datenbank laden.
          */
-        $equipment = Equipment::findOrFail($id);
-        $types = Type::all();
+        $type = Type::findOrFail($id);
 
         /**
          * View laden und Daten übergeben.
          */
-        View::render('equipments/edit', [
-            'equipment' => $equipment,
-            'types' => $types
+        View::render('types/edit', [
+            'type' => $type
         ]);
     }
 
@@ -129,25 +115,25 @@ class  EquipmentController
              * ... und leiten zurück zum Bearbeitungsformular. Der Code weiter unten in dieser Funktion wird dadurch
              * nicht mehr ausgeführt.
              */
-            Redirector::redirect("/equipments/${id}");
+            Redirector::redirect("/types/${id}");
         }
 
         /**
-         * Gewünschtes Equipment über das Model aus der Datenbank laden. Hier verwenden wir die findOrFail()-Methode aus
+         * Gewünschten Type über das Model aus der Datenbank laden. Hier verwenden wir die findOrFail()-Methode aus
          * dem AbstractModel, die einen 404 Fehler ausgibt, wenn das Objekt nicht gefunden wird. Dadurch sparen wir uns
          * hier zu prüfen, ob ein Post gefunden wurde oder nicht.
          */
-        $equipment = Equipment::findOrFail($id);
+        $type = Type::findOrFail($id);
 
         /**
          * Sind keine Fehler aufgetreten legen aktualisieren wir die Werte des vorher geladenen Objekts ...
          */
-        $equipment->fill($_POST);
+        $type->fill($_POST);
 
         /**
          * Schlägt die Speicherung aus irgendeinem Grund fehl ...
          */
-        if (!$equipment->save()) {
+        if (!$type->save()) {
             /**
              * ... so speichern wir einen Fehler in die Session und leiten wieder zurück zum Bearbeitungsformular.
              */
@@ -157,7 +143,7 @@ class  EquipmentController
         /**
          * Wenn alles funktioniert hat, leiten wir zurück zur /home-Route.
          */
-        Redirector::redirect("/equipments/${id}");
+        Redirector::redirect("/types/${id}");
     }
 
     /**
@@ -175,16 +161,9 @@ class  EquipmentController
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * Alle Typs laden, damit wir das Types Dropdown befüllen können damit.
-         */
-        $types = Type::all();
-
-        /**
          * View laden und Daten übergeben.
          */
-        View::render('equipments/create', [
-            'types' => $types
-        ]);
+        View::render('types/create');
     }
 
     /**
@@ -227,34 +206,34 @@ class  EquipmentController
              * ... und leiten zurück zum Bearbeitungsformular. Der Code weiter unten in dieser Funktion wird dadurch
              * nicht mehr ausgeführt.
              */
-            Redirector::redirect("/equipments/create");
+            Redirector::redirect("/types/create");
         }
 
         /**
-         * Neues Equipment erstellen und mit den Daten aus dem Formular befüllen.
+         * Neuen Type erstellen und mit den Daten aus dem Formular befüllen.
          */
-        $equipment = new Equipment();
-        $equipment->fill($_POST);
+        $type = new Type();
+        $type->fill($_POST);
 
         /**
          * Schlägt die Speicherung aus irgendeinem Grund fehl ...
          */
-        if (!$equipment->save()) {
+        if (!$type->save()) {
             /**
              * ... so speichern wir einen Fehler in die Session und leiten wieder zurück zum Bearbeitungsformular.
              */
             Session::set('errors', ['Speichern fehlgeschlagen.']);
-            Redirector::redirect("/equipments/create");
+            Redirector::redirect("/types/create");
         }
 
         /**
          * Wenn alles funktioniert hat, leiten wir zurück zur /home-Route.
          */
-        Redirector::redirect('/equipments');
+        Redirector::redirect('/types');
     }
 
     /**
-     * Confirmation Page für die Löschung eines Equipments laden.
+     * Confirmation Page für die Löschung eines Types laden.
      *
      * @param int $id
      *
@@ -270,9 +249,9 @@ class  EquipmentController
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * Equipment, das gelöscht werden soll, aus der DB laden.
+         * Type, der gelöscht werden soll, aus der DB laden.
          */
-        $equipment = Equipment::findOrFail($id);
+        $type = Type::findOrFail($id);
 
         /**
          * View laden und relativ viele Daten übergeben. Die große Anzahl an Daten entsteht dadurch, dass der
@@ -282,15 +261,15 @@ class  EquipmentController
          * Bestätigungsbutton und eine für den Abbrechen-Button.
          */
         View::render('helpers/confirmation', [
-            'objectType' => 'Equipment',
-            'objectTitle' => $equipment->name,
-            'confirmUrl' => BASE_URL . '/equipments/' . $equipment->id . '/delete/confirm',
-            'abortUrl' => BASE_URL . '/equipments'
+            'objectType' => 'Type',
+            'objectTitle' => $type->name,
+            'confirmUrl' => BASE_URL . '/types/' . $type->id . '/delete/confirm',
+            'abortUrl' => BASE_URL . '/types'
         ]);
     }
 
     /**
-     * Equipment löschen.
+     * Type löschen.
      *
      * @param int $id
      *
@@ -306,22 +285,22 @@ class  EquipmentController
         AuthMiddleware::isAdminOrFail();
 
         /**
-         * Equipment, das gelöscht werden soll, aus DB laden.
+         * Type, der gelöscht werden soll, aus DB laden.
          */
-        $equipment = Equipment::findOrFail($id);
+        $type = Type::findOrFail($id);
         /**
-         * Equipment löschen.
+         * Type löschen.
          */
-        $equipment->delete();
+        $type->delete();
 
         /**
          * Erfolgsmeldung für später in die Session speichern.
          */
-        Session::set('success', ['Equipment erfolgreich gelöscht.']);
+        Session::set('success', ['Typ erfolgreich gelöscht.']);
         /**
          * Weiterleiten zur Home Seite.
          */
-        Redirector::redirect('/equipments');
+        Redirector::redirect('/types');
     }
 
     /**
@@ -346,9 +325,6 @@ class  EquipmentController
              * Hier verwenden wir "named params", damit wir einzelne Funktionsparameter überspringen können.
              */
             $validator->textnum($_POST['name'], label: 'Name', required: true, max: 255);
-            $validator->textnum($_POST['description'], label: 'Description');
-            $validator->int((int)$_POST['units'], label: 'Units');
-//            $validator->int((int)$_POST['type'], label: 'Type');
         }
 
         /**

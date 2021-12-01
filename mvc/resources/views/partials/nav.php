@@ -18,6 +18,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo BASE_URL; ?>/equipments">Equipments</a>
                 </li>
+                <?php if(\Core\Middlewares\AuthMiddleware::isAdmin()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>/types">Types</a>
+                    </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo BASE_URL; ?>/profile">Profile</a>
                 </li>

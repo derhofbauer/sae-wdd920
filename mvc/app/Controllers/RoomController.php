@@ -36,12 +36,22 @@ class RoomController
         $roomFeatures = RoomFeature::all();
 
         /**
-         * @todo: comment
+         * Wir gehen alle Raum Features durch, damit wir festlegen können, welche der Filter Checkboxen vorausgewählt
+         * sein soll, nachdem gefiltert wurde.
          */
         foreach ($roomFeatures as $roomFeature) {
+            /**
+             * Sind Filter als GET Parameter übergeben worden UND kommt die Raum Feature ID in diesen Filtern vor ...
+             */
             if (isset($_GET['filters']) && in_array($roomFeature->id, $_GET['filters'])) {
+                /**
+                 * ... so erstellen wir die checked-Property dynamisch und setzen sie auf true.
+                 */
                 $roomFeature->checked = true;
             } else {
+                /**
+                 * Andernfalls erstellen wir sie dynamisch und setzen sie auf false.
+                 */
                 $roomFeature->checked = false;
             }
         }

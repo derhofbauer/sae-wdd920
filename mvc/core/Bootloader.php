@@ -28,7 +28,7 @@ class Bootloader
         define('BASE_URL', Config::get('app.baseurl', 'http://localhost:8080'));
 
         /**
-         * @todo: comment
+         * Hier laden wir ein paar ganz einfache Hilfsfunktionen, die uns das Leben leichter machen sollen.
          */
         require_once 'helpers.php';
 
