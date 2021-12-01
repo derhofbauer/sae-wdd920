@@ -1,5 +1,5 @@
 <div class="col-4">
-    <form action="<?php echo BASE_URL; ?>/sign-up/do" method="post">
+    <form action="<?php url_e('/sign-up/do'); ?>" method="post">
 
         <div class="mb-3">
             <label for="email">Email</label>
@@ -22,6 +22,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Registrieren</button>
-        <a href="<?php echo BASE_URL; ?>/login" class="btn btn-link">Login</a>
+        <a href="<?php url_e('/login'); ?>" class="btn btn-link">Login</a>
     </form>
 </div>

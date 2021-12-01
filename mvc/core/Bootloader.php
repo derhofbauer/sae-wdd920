@@ -28,6 +28,11 @@ class Bootloader
         define('BASE_URL', Config::get('app.baseurl', 'http://localhost:8080'));
 
         /**
+         * @todo: comment
+         */
+        require_once 'helpers.php';
+
+        /**
          * Ein try-catch-Block ermöglicht es uns Code auszuführen und eine Exception, die in diesem Code auftritt
          * abzufangen, ohne dass der Skriptdurchlauf abgebrochen wird.
          */

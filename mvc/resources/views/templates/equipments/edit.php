@@ -19,8 +19,11 @@
         <div class="col">
             <div class="form-group">
                 <label for="type">Type</label>
-                <select class="form-select" name="type" id="type" disabled>
-                    <option value="_default">Bitte auswählen ...</option>
+                <select class="form-select" name="type_id" id="type" required>
+                    <option value="_default" hidden>Bitte auswählen ...</option>
+                    <?php foreach ($types as $type): ?>
+                        <option value="<?php echo $type->id; ?>"<?php echo ($type->id === $equipment->type_id ? ' selected' : ''); ?>><?php echo $type->name; ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>

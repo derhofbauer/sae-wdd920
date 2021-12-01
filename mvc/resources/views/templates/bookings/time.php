@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">Raumbuchung: <?php echo $room->name; ?></div>
     <div class="card-body">
-        <form action="<?php echo BASE_URL . "/rooms/$room->id/booking/do"; ?>" method="post">
+        <form action="<?php url_e("/rooms/$room->id/booking/do"); ?>" method="post">
             <div class="form-group">
                 <label for="date">Datum</label>
                 <input type="date" name="date" id="date" class="form-control">
@@ -20,8 +20,8 @@
              */
             for ($i = $bookingStart; $i < $bookingEnd; $i++): ?>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="timeslots[]" id="timeslot[<?php echo $i; ?>]" value="<?php echo $i; ?>">
-                    <label for="timeslot[<?php echo $i; ?>]" class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="timeslots[]" id="timeslot[<?php _e($i); ?>]" value="<?php _e($i); ?>">
+                    <label for="timeslot[<?php _e($i); ?>]" class="form-check-label">
                         <?php
                         /**
                          * Nun formatieren wir die Zählervariable $i so, dass wir eine Uhrzeit herausbekommen. Die

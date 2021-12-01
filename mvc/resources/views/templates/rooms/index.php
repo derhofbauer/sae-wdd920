@@ -12,15 +12,12 @@
     <form class="form-inline" method="get">
         <div class="row">
             <?php
-            /**
-             * @todo: CONTINUE HERE!
-             * @todo: Pre-select checkboxes when present in $_GET.
-             */
             foreach ($roomFeatures as $roomFeature): ?>
                 <div class="form-check col">
                     <input type="checkbox" value="<?php
                     echo $roomFeature->id; ?>" class="form-check-input" name="filters[]" id="filters[<?php
-                    echo $roomFeature->id; ?>]">
+                    echo $roomFeature->id; ?>]"<?php
+                    echo ($roomFeature->checked === true ? ' checked' : ''); ?>>
                     <label for="filters[<?php
                     echo $roomFeature->id; ?>]"><?php
                         echo $roomFeature->name; ?></label>

@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Models\DateTime;
+
 /**
  * Class Validator
  *
@@ -22,7 +24,9 @@ class Validator
         'alphanumeric' => '/^[^-_]{1}[a-zA-Z0-9-_]*$/',
         'checkbox' => '/^(on|true|checked|1)$/i',
         'password' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',
-        'email' => '/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix' // taken from: https://www.w3schools.in/php-script/email-validation-php-regular-expression/
+        'email' => '/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix',
+        // taken from: https://www.w3schools.in/php-script/email-validation-php-regular-expression/
+        'intRegex' => '/^[0-9]+$/'
     ];
 
     /**
@@ -55,11 +59,14 @@ class Validator
 
         'numeric' => '%s muss numerisch sein.',
         'int' => '%s muss ganzzahlig sein.',
+        'intRegex' => '%s muss ganzzahlig sein.',
         'float' => '%s muss eine Fließkommazahl sein.',
 
         'equals' => '%s muss ident sein mit %s.',
         'compare' => '%s und %s müssen ident sein.',
         'unique' => '%s wird bereits verwendet.',
+        'date' => '%s muss ein Datum sein.',
+        'array-required' => '%s muss Werte beinhalten.',
 
         'required' => '%s ist ein Pflichtfeld.',
         'min' => '%s muss mindestens %s sein.',
@@ -263,7 +270,11 @@ class Validator
                 if (!empty($maxFileSize)) {
                     $_filesize = $files['size'][$index];
                     if ($_filesize > $maxFileSize) {
-                        $this->errors[] = sprintf($this->errorMessages['file-size'], $label, $maxFileSize / 1024 / 1024);
+                        $this->errors[] = sprintf(
+                            $this->errorMessages['file-size'],
+                            $label,
+                            $maxFileSize / 1024 / 1024
+                        );
                         return false;
                     }
                 }
@@ -273,6 +284,54 @@ class Validator
         /**
          * Ist bisher kein Fehler aufgetreten, war die Validierung erfolgreich.
          */
+        return true;
+    }
+
+    /**
+     * @param mixed  $value
+     * @param string $label
+     * @param bool   $required
+     *
+     * @return bool
+     * @todo: comment
+     */
+    public function date(mixed $value, string $label, bool $required = false): bool
+    {
+        if ($this->validateRequired($required, $value, $label) === false) {
+            return false;
+        }
+
+        try {
+            (new DateTime($value));
+            return true;
+        } catch (\Exception $exception) {
+            $this->errors[] = sprintf($this->errorMessages['date'], $label);
+            return false;
+        }
+    }
+
+    /**
+     * @param array  $value
+     * @param string $type
+     * @param string $label
+     * @param bool   $required
+     *
+     * @return bool
+     * @todo: comment
+     */
+    public function _array(array $value, string $label, string $type = 'intRegex', bool $required = false): bool
+    {
+        if ($required === true && empty($value)) {
+            $this->errors[] = sprintf($this->errorMessages['array-required'], $label);
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if ($this->$type($item, label: $label) === false) {
+                return false;
+            }
+        }
+
         return true;
     }
 

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Equipment;
+use App\Models\Type;
 use Core\Helpers\Redirector;
 use Core\Middlewares\AuthMiddleware;
 use Core\Session;
@@ -75,12 +76,14 @@ class  EquipmentController
          * Gewünschtes Element über das zugehörige Model aus der Datenbank laden.
          */
         $equipment = Equipment::findOrFail($id);
+        $types = Type::all();
 
         /**
          * View laden und Daten übergeben.
          */
         View::render('equipments/edit', [
             'equipment' => $equipment,
+            'types' => $types
         ]);
     }
 
@@ -172,9 +175,16 @@ class  EquipmentController
         AuthMiddleware::isAdminOrFail();
 
         /**
+         * @todo: comment
+         */
+        $types = Type::all();
+
+        /**
          * View laden und Daten übergeben.
          */
-        View::render('equipments/create');
+        View::render('equipments/create', [
+            'types' => $types
+        ]);
     }
 
     /**

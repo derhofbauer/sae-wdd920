@@ -4,21 +4,12 @@ namespace App\Models;
 
 use Core\Database;
 use Core\Models\AbstractModel;
+use Core\Models\DateTime;
 use Core\Traits\SoftDelete;
 
-/**
- * Equipment
- */
-class Equipment extends AbstractModel
+class Type extends AbstractModel
 {
-    /**
-     * Wird innerhalb einer Klasse das use-Keyword verwendet, so wird damit ein Trait importiert. Das kann man sich
-     * vorstellen wie einen Import mittels require, weil die Methoden, die im Trait definiert sind, einfach in die
-     * Klasse, die den Trait verwendet, eingefügt werden, als ob sie in der Klasse selbst definiert worden wären.
-     * Das hat den Vorteil, dass Methoden, die in mehreren Klassen vorkommen, zentral definiert und verwaltet werden
-     * können in einem Trait, und dennoch überall dort eingebunden werden, wo sie gebraucht werden, ohne Probleme mit
-     * komplexen und sehr verschachtelten Vererbungen zu kommen.
-     */
+
     use SoftDelete;
 
     public function __construct(
@@ -29,13 +20,10 @@ class Equipment extends AbstractModel
          * Im Prinzip definieren wir alle Spalten aus der Tabelle mit dem richtigen Datentyp.
          */
         public ?int $id = null,
-        public string $name = '',
-        public ?string $description = null,
-        public int $units = 1,
-        public ?int $type_id = null,
+        public ?string $name = null,
         public string $created_at = '',
         public string $updated_at = '',
-        public ?string $deleted_at = null,
+        public ?string $deleted_at = null
     ) {
     }
 
@@ -69,12 +57,9 @@ class Equipment extends AbstractModel
              * der Query funktioniert hat oder nicht.
              */
             $result = $database->query(
-                "UPDATE $tablename SET name = ?, description = ?, units = ?, type_id = ? WHERE id = ?",
+                "UPDATE $tablename SET name = ? WHERE id = ?",
                 [
                     's:name' => $this->name,
-                    's:description' => $this->description,
-                    's:units' => $this->units,
-                    's:type_id' => $this->type_id,
                     'i:id' => $this->id
                 ]
             );
@@ -84,12 +69,12 @@ class Equipment extends AbstractModel
             /**
              * Hat das Objekt keine id, so müssen wir es neu anlegen.
              */
-            $result = $database->query("INSERT INTO $tablename SET name = ?, description = ?, units = ?, type_id = ?", [
-                's:name' => $this->name,
-                's:description' => $this->description,
-                's:units' => $this->units,
-                's:type_id' => $this->type_id,
-            ]);
+            $result = $database->query(
+                "INSERT INTO $tablename SET name = ?",
+                [
+                    's:name' => $this->name,
+                ]
+            );
 
             /**
              * Ein INSERT Query generiert eine neue id, diese müssen wir daher extra abfragen und verwenden daher die
@@ -106,17 +91,11 @@ class Equipment extends AbstractModel
     }
 
     /**
-     * @return ?Type
-     * @todo: Implement type relation & form dropdowns for types!
-     *
-     * Hier legen wir eine Methode an, damit wir später, sofern wir noch genug Zeit haben, die Relation zu den Types
-     * herstellen können, ohne die Views anpassen zu müssen.
+     * @return string
+     * @todo: comment
      */
-    public function type(): ?Type
+    public function __toString(): string
     {
-       if (!empty($this->type_id)) {
-           return Type::find($this->type_id);
-       }
-       return null;
+        return $this->name; // Komplexere Strings sind natürlich auch möglich, z.B. "{$this->name} [{$this->id}]"
     }
 }

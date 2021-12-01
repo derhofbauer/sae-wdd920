@@ -36,6 +36,17 @@ class RoomController
         $roomFeatures = RoomFeature::all();
 
         /**
+         * @todo: comment
+         */
+        foreach ($roomFeatures as $roomFeature) {
+            if (isset($_GET['filters']) && in_array($roomFeature->id, $_GET['filters'])) {
+                $roomFeature->checked = true;
+            } else {
+                $roomFeature->checked = false;
+            }
+        }
+
+        /**
          * View laden und Daten übergeben.
          */
         View::render('rooms/index', [
@@ -395,9 +406,6 @@ class RoomController
                 ignoreThisId: $id
             );
             $validator->file($_FILES['images'], label: 'Images', type: 'image');
-            /**
-             * @todo: implement Validate Array + Contents
-             */
         }
 
         /**

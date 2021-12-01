@@ -10,6 +10,7 @@ use Core\Middlewares\AuthMiddleware;
 use Core\Models\DateTime;
 use Core\Session;
 use Core\View;
+use Core\Validator;
 
 /**
  * Booking Controller
@@ -62,9 +63,12 @@ class BookingController
          */
         AuthMiddleware::isLoggedInOrFail();
 
-        /**
-         * @todo: Hier müsste eigentlich validiert werden! Wir verzichten der Einfachheit halber vorerst darauf.
-         */
+        $validationErrors = $this->validateFormData();
+
+        if (!empty($validationErrors)) {
+            Session::set('errors', $validationErrors);
+            Redirector::redirect("/rooms/$id/booking/time");
+        }
 
         /**
          * Wurden Timeslots aus dem Fomular übergeben?
@@ -146,18 +150,50 @@ class BookingController
             /**
              * In jedem anderen Fall speichern wir einen Fehler in die Session.
              */
-            Session::set('errors', ['Einer der gewählten Timeslots ist bereits vergeben.']);
+            $validationErrors[] = 'Einer der gewählten Timeslots ist bereits vergeben.';
         } else {
             /**
              * In jedem anderen Fall speichern wir einen Fehler in die Session.
              */
-            Session::set('errors', ['Keine Timeslots ausgewählt.']);
+            $validationErrors[] = 'Keine Timeslots ausgewählt.';
         }
 
         /**
          * Nun leiten wir weiter zum Buchungsformular.
          */
+        Session::set('errors', $validationErrors);
         Redirector::redirect("/rooms/$id/booking/time");
+    }
+
+    /**
+     * Validierungen kapseln, damit wir sie überall dort, wo wir derartige Objekte validieren müssen, verwenden können.
+     *
+     * @return array
+     */
+    private function validateFormData(): array
+    {
+        /**
+         * Neues Validator Objekt erstellen.
+         */
+        $validator = new Validator();
+
+        /**
+         * Gibt es überhaupt Daten, die validiert werden können?
+         */
+        if (!empty($_POST)) {
+            /**
+             * Daten validieren. Für genauere Informationen zu den Funktionen s. Core\Validator.
+             *
+             * Hier verwenden wir "named params", damit wir einzelne Funktionsparameter überspringen können.
+             */
+            $validator->date($_POST['date'], label: 'Datum', required: true);
+            $validator->_array($_POST['timeslots'], type: 'intRegex', label: 'Timeslots', required: true);
+        }
+
+        /**
+         * Fehler aus dem Validator zurückgeben.
+         */
+        return $validator->getErrors();
     }
 
 }
