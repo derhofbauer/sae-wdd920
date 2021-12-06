@@ -53,6 +53,8 @@ class CartController
 
         /**
          * Redirect.
+         *
+         * Hier verwenden wir den Referrer, den wir im BootLoader::__destruct() setzen.
          */
         Redirector::redirect(Session::get('referrer', '/cart'), pathFromDomain: true);
     }
@@ -63,7 +65,6 @@ class CartController
      * @param int $id
      *
      * @throws \Exception
-     * @todo: comment
      */
     public function addGet(int $id)
     {
@@ -79,6 +80,9 @@ class CartController
 
         /**
          * Redirect.
+         *
+         * Hier verwenden wir einen GET-Parameter zur weiterleitung, den wir an die URL von dem Link manuell dran
+         * gehängt haben um pro Link genau definieren zu können, wo hin redirectet werden soll.
          */
         Redirector::redirect($_GET['redirect']);
     }
@@ -89,7 +93,6 @@ class CartController
      * @param int $id
      *
      * @throws \Exception
-     * @todo: comment
      */
     public function addAjax(int $id)
     {
@@ -104,7 +107,11 @@ class CartController
         CartService::add($equipment);
 
         /**
-         * Ergebnis
+         * Ergebnis als JSON zurückgeben.
+         *
+         * Eine API Route braucht nicht redirecten, weil der Request von einer JavaScript Funktion ausgeführt wird,
+         * daher wird meistens ein JSON zurückgegeben. Hier geben wir den aktualisierten Inhalt des Carts und den
+         * Counter über das Cart zurück.
          */
         echo json_encode([
             'cart' => CartService::get(),

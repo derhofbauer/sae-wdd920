@@ -92,7 +92,7 @@ trait SoftDelete
     }
 
     /**
-     * Alle Datensätze aus der Datenbank abfragen.
+     * Alle Datensätze in einer paginierten Form aus der Datenbank abfragen.
      *
      * Die beiden Funktionsparameter bieten die Möglichkeit die Daten, die abgerufen werden, nach einer einzelnen Spalte
      * aufsteigend oder absteigend direkt über MySQL zu sortieren. Sortierungen sollten, sofern möglich, über die
@@ -101,10 +101,9 @@ trait SoftDelete
      * @param string|null $orderBy
      * @param string|null $direction
      * @param int         $limit
-     * @param int         $offest
+     * @param int         $offset
      *
      * @return array
-     * @todo: comment & move to regular model!
      */
     public static function paginate(
         ?string $orderBy = null,
@@ -134,6 +133,9 @@ trait SoftDelete
             $result = $database->query(
                 "SELECT * FROM $tablename WHERE deleted_at IS NULL LIMIT ?, ?",
                 [
+                    /**
+                     * Hier setzen wir $offset und $limit, damit wir nur einen Teil der Daten erhalten.
+                     */
                     'i:offset' => $offset,
                     'i:limit' => $limit,
                 ]
@@ -142,6 +144,9 @@ trait SoftDelete
             $result = $database->query(
                 "SELECT * FROM $tablename WHERE deleted_at IS NULL ORDER BY $orderBy $direction LIMIT ?, ?",
                 [
+                    /**
+                     * Hier setzen wir $offset und $limit, damit wir nur einen Teil der Daten erhalten.
+                     */
                     'i:offset' => $offset,
                     'i:limit' => $limit,
                 ]

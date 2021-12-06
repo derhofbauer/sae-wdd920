@@ -87,10 +87,14 @@ class Bootloader
     }
 
     /**
-     * @todo: comment
+     * Der Destruktor wird automatisch aufgerufen, wenn die letzte Referenz auf dieses Objekt entfernt wird.
      */
     public function __destruct()
     {
+        /**
+         * Hier speichern wir die zuletzt aufgerufene URL in die Session, damit sie beim nächsten Request wieder
+         * aufgerufen und für einen Redirect verwendet werden kann.
+         */
         Session::set('referrer', $_SERVER['REQUEST_URI']);
     }
 

@@ -22,16 +22,30 @@ class  EquipmentController
     public function index()
     {
         /**
-         * Alle Objekte über das Model aus der Datenbank laden.
+         * Alle Objekte über das Model paginiert aus der Datenbank laden.
          */
 
         /**
-         * @todo: comment
+         * Anzahl der Elemente pro Seite.
          */
         $itemsPerPage = 4;
+        /**
+         * Welche Seite soll angezeigt werden? Wenn ein 'page' GET-Parameter gesetzt ist, dann verwenden wir den, sonst
+         * zeigen wir Seite 1.
+         */
         $page = $_GET['page'] ?? 1;
+        /**
+         * Berechnen, wie viele Elemente übersprungen werden sollen anhand der $itemsPerPage und der $page.
+         */
         $offset = ($page - 1) * $itemsPerPage;
+        /**
+         * Equipments paginiert laden.
+         */
         $equipments = Equipment::paginate(limit: $itemsPerPage, offset: $offset);
+
+        /**
+         * Anzahl der möglichen Seiten für das Pagination Menü am unteren Ende der Tabelle berechnen.
+         */
         $pages = ceil(count(Equipment::all()) / $itemsPerPage);
 
         /**
