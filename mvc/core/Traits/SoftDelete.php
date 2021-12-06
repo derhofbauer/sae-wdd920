@@ -91,4 +91,67 @@ trait SoftDelete
         return self::handleResult($result);
     }
 
+    /**
+     * Alle Datensätze aus der Datenbank abfragen.
+     *
+     * Die beiden Funktionsparameter bieten die Möglichkeit die Daten, die abgerufen werden, nach einer einzelnen Spalte
+     * aufsteigend oder absteigend direkt über MySQL zu sortieren. Sortierungen sollten, sofern möglich, über die
+     * Datenbank durchgeführt werden, weil das wesentlich performanter ist als über PHP.
+     *
+     * @param string|null $orderBy
+     * @param string|null $direction
+     * @param int         $limit
+     * @param int         $offest
+     *
+     * @return array
+     * @todo: comment & move to regular model!
+     */
+    public static function paginate(
+        ?string $orderBy = null,
+        ?string $direction = null,
+        int $limit = 15,
+        int $offset = 0
+    ): array {
+        /**
+         * Datenbankverbindung herstellen.
+         */
+        $database = new Database();
+        /**
+         * Tabellennamen berechnen.
+         */
+        $tablename = self::getTablenameFromClassname();
+
+        /**
+         * Query ausführen.
+         *
+         * Wurde in den Funktionsparametern eine Sortierung definiert, so wenden wir sie hier an, andernfalls rufen wir
+         * alles ohne Sortierung ab.
+         *
+         * Hier nehmen wir auch Rücksicht auf die deleted_at Spalte und geben nur Einträge zurück, die nicht als
+         * gelöscht markiert sind.
+         */
+        if ($orderBy === null) {
+            $result = $database->query(
+                "SELECT * FROM $tablename WHERE deleted_at IS NULL LIMIT ?, ?",
+                [
+                    'i:offset' => $offset,
+                    'i:limit' => $limit,
+                ]
+            );
+        } else {
+            $result = $database->query(
+                "SELECT * FROM $tablename WHERE deleted_at IS NULL ORDER BY $orderBy $direction LIMIT ?, ?",
+                [
+                    'i:offset' => $offset,
+                    'i:limit' => $limit,
+                ]
+            );
+        }
+
+        /**
+         * Datenbankergebnis verarbeiten und zurückgeben.
+         */
+        return self::handleResult($result);
+    }
+
 }

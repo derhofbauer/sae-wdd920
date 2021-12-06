@@ -27,7 +27,9 @@
                     <a class="nav-link" href="<?php echo BASE_URL; ?>/profile">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_URL; ?>/cart">Cart (<?php echo \App\Services\CartService::getCount(); ?>)</a>
+                    <a class="nav-link" href="<?php echo BASE_URL; ?>/cart">
+                        Cart (<span class="cart-counter"><?php echo \App\Services\CartService::getCount(); ?></span>)
+                    </a>
                 </li>
             </ul>
             <?php

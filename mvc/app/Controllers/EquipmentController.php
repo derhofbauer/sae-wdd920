@@ -24,13 +24,22 @@ class  EquipmentController
         /**
          * Alle Objekte über das Model aus der Datenbank laden.
          */
-        $equipments = Equipment::all();
+
+        /**
+         * @todo: comment
+         */
+        $itemsPerPage = 4;
+        $page = $_GET['page'] ?? 1;
+        $offset = ($page - 1) * $itemsPerPage;
+        $equipments = Equipment::paginate(limit: $itemsPerPage, offset: $offset);
+        $pages = ceil(count(Equipment::all()) / $itemsPerPage);
 
         /**
          * View laden und Daten übergeben.
          */
         View::render('equipments/index', [
-            'equipments' => $equipments
+            'equipments' => $equipments,
+            'pages' => $pages
         ]);
     }
 

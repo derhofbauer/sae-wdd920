@@ -142,3 +142,58 @@ D Delete
 + Admin: Files Edit
 + Admin: Files Upload
 + Admin: Comments Liste
+
+
+### Orders
+
+Order
+ + id
+ + user_id
+ + address ...
+ + payment ...
+ + products TEXT: 1:2,3:14,4:1 // [{id: 1, name: "product name", qty: 2, size: 'sm'},{id:3, name: '...', qty: 14}...]
+
+orders_products_mm
+ + id
+ + order_id
+ + product_id
+ + qty
+
+----
+
+Products
+ + id
+ + name
+ + stock_xs
+ + stock_s
+ + stock_m
+ + stock_l
+ + stock_xl
+ + ...
+
+----
+
+Products
+ + id
+ + identifier: "product-1"
+ + name
+ + stock
+ + size: 'xs'|'s',....
+
+----
+
+Products
+ + id
+ + name
+ + ...
+
+Sizes
+ + id
+ + name
+
+products_sizes_mm
+  + id
+  + product_id
+  + size_id
+  + stock
+  + price

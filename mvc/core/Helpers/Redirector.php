@@ -18,7 +18,7 @@ class Redirector
      * @param string|null $redirect
      * @param bool        $useBaseUrl
      */
-    public static function redirect(?string $redirect = null, bool $useBaseUrl = true)
+    public static function redirect(?string $redirect = null, bool $useBaseUrl = true, bool $pathFromDomain = false)
     {
         /**
          * Wurde eine Redirect-URL übergeben, leiten wir hier weiter.
@@ -28,7 +28,16 @@ class Redirector
              * Soll das übergeben Redirect-Ziel mit der BASE_URL geprefixt werde?
              */
             if ($useBaseUrl === true) {
-                header("Location: " . BASE_URL . "$redirect");
+
+                /**
+                 * @todo: comment
+                 */
+                $host = BASE_URL;
+                if ($pathFromDomain === true) {
+                    $parsedUrl = parse_url(BASE_URL);
+                    $host = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . ':' . $parsedUrl['port'];
+                }
+                header("Location: " . $host . "$redirect");
                 exit;
             }
 

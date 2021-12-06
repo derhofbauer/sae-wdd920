@@ -60,3 +60,13 @@
     <?php
     endforeach; ?>
 </table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <?php for ($i = 1; $i <= $pages; $i++): ?>
+            <li class="page-item">
+                <a class="page-link" href="?page=<?php _e($i); ?>"><?php _e($i); ?></a>
+            </li>
+        <?php endfor; ?>
+    </ul>
+</nav>

@@ -42,7 +42,6 @@ class Bootloader
              */
             $router = new Router();
             $router->route();
-
         } catch (\Exception $exception) {
             /**
              * Ist innerhalb des try-Blocks eine Exception aufgetreten (auch innerhalb von Funktionen, die in dem Block
@@ -85,6 +84,14 @@ class Bootloader
              */
             error_reporting(E_ALL);
         }
+    }
+
+    /**
+     * @todo: comment
+     */
+    public function __destruct()
+    {
+        Session::set('referrer', $_SERVER['REQUEST_URI']);
     }
 
 }

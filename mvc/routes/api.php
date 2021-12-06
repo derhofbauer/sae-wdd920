@@ -10,6 +10,8 @@
  * werden wie im web.php Routes File, ohne das /api/ Präfix, weil das automatisch dazu gehängt wird in \Core\Router.
  */
 
-return [
+use App\Controllers\CartController;
 
+return [
+    '/equipments/{id}/add-to-cart-ajax' => [CartController::class, 'addAjax'],
 ];

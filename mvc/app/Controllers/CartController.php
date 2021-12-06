@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Equipment;
 use App\Services\CartService;
 use Core\Helpers\Redirector;
+use Core\Session;
 use Core\View;
 
 /**
@@ -53,7 +54,62 @@ class CartController
         /**
          * Redirect.
          */
-        Redirector::redirect('/cart');
+        Redirector::redirect(Session::get('referrer', '/cart'), pathFromDomain: true);
+    }
+
+    /**
+     * Equipment in Cart hinzufügen (+1)
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     * @todo: comment
+     */
+    public function addGet(int $id)
+    {
+        /**
+         * Equipment, das hinzugefügt werden soll, laden.
+         */
+        $equipment = Equipment::findOrFail($id);
+
+        /**
+         * Equipment in Cart hinzufügen.
+         */
+        CartService::add($equipment);
+
+        /**
+         * Redirect.
+         */
+        Redirector::redirect($_GET['redirect']);
+    }
+
+    /**
+     * Equipment in Cart hinzufügen (+1)
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     * @todo: comment
+     */
+    public function addAjax(int $id)
+    {
+        /**
+         * Equipment, das hinzugefügt werden soll, laden.
+         */
+        $equipment = Equipment::findOrFail($id);
+
+        /**
+         * Equipment in Cart hinzufügen.
+         */
+        CartService::add($equipment);
+
+        /**
+         * Ergebnis
+         */
+        echo json_encode([
+            'cart' => CartService::get(),
+            'count' => CartService::getCount()
+        ]);
     }
 
     /**

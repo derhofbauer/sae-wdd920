@@ -96,6 +96,7 @@ return [
      */
     '/cart' => [CartController::class, 'index'],
     '/equipments/{id}/add-to-cart' => [CartController::class, 'add'],
+    '/equipments/{id}/add-to-cart-get' => [CartController::class, 'addGet'],
     '/equipments/{id}/remove-from-cart' => [CartController::class, 'remove'],
     '/equipments/{id}/remove-all-from-cart' => [CartController::class, 'removeAll'],
 
