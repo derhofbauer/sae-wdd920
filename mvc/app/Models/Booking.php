@@ -224,7 +224,7 @@ class Booking extends AbstractModel
          *
          * "SELECT *, COUNT(*) as units FROM $tablename WHERE foreign_table = ? AND user_id = ? GROUP BY foreign_id",
          */
-            "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ?",
+            "SELECT * FROM $tablename WHERE foreign_table = ? AND user_id = ? AND deleted_at IS NULL",
             [
                 's:foreign_table' => Equipment::class,
                 'i:user_id' => $userId,

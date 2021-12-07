@@ -23,7 +23,6 @@
             endforeach; ?>
         </ul>
     </div>
-
     <div class="col-4">
         <h3>Mein Equipment</h3>
         <ul>
@@ -36,6 +35,8 @@
                     echo $bookable->name; ?>
                     (<?php
                     echo $equipmentBooking->units; ?>x)
+
+                    <a href="<?php url_e("/checkin/{$equipmentBooking->id}"); ?>" class="btn btn-primary btn-sm">Zurückgeben</a>
                 </li>
             <?php
             endforeach; ?>

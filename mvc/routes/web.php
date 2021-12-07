@@ -7,6 +7,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\BookingController;
+use App\Controllers\CheckinController;
 use App\Controllers\EquipmentController;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
@@ -101,10 +102,11 @@ return [
     '/equipments/{id}/remove-all-from-cart' => [CartController::class, 'removeAll'],
 
     /**
-     * Checkout Routes
+     * Checkout/Checkin Routes
      */
     '/checkout/summary' => [CheckoutController::class, 'summary'],
     '/checkout/finish' => [CheckoutController::class, 'finish'],
+    '/checkin/{id}' => [CheckinController::class, 'returnEquipment'],
 
     /**
      * Booking Routes
